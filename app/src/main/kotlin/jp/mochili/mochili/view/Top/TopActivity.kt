@@ -1,4 +1,4 @@
-package jp.mochili.mochili.view
+package jp.mochili.mochili.view.Top
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle

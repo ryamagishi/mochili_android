@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="jp.mochili.mochili.view.TopActivity">
+    tools:context="jp.mochili.mochili.view.Top.TopActivity">
 
     <TextView
         android:layout_width="wrap_content"

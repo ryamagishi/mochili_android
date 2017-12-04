@@ -8,42 +8,25 @@ import com.amazonaws.mobileconnectors.apigateway.ApiClientFactory
 import jp.mochili.mochili.model.AWS.AWSClient
 import jp.mochili.mochili.model.apigateway.MochiliClient
 import kotlin.concurrent.thread
-import cn.hugeterry.coordinatortablayout.CoordinatorTabLayout
-import android.support.v4.view.ViewPager
-import android.R.menu
 import android.support.v4.app.Fragment
 import android.view.Menu
 import android.view.MenuItem
 import jp.mochili.mochili.model.IntentUtils
+import kotlinx.android.synthetic.main.activity_top.*
 
 
 class TopActivity : AppCompatActivity() {
 
-    private var mCoordinatorTabLayout: CoordinatorTabLayout? = null
-    private val mImageArray: IntArray? = null
-    private val mColorArray: IntArray? = null
-    private val mFragments: MutableList<Fragment> = mutableListOf()
-    private val mTitles = arrayOf("Android", "iOS", "Web", "Other")
-    private var mViewPager: ViewPager? = null
+    private val fragments: MutableList<Fragment> = mutableListOf()
+    private val titles = arrayOf("持ち物リスト", "友達", "Web", "Other")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_top)
 
-        //Add the fragment to the viewpager
-        initFragments()
-        initViewPager()
-        //Image array
-        val mImageArray = intArrayOf(R.mipmap.ic_launcher, R.mipmap.ic_launcher_round, R.mipmap.ic_launcher, R.mipmap.ic_launcher_round)
+        setView()
 
-        mCoordinatorTabLayout = findViewById(R.id.coordinatortablayout) as CoordinatorTabLayout
-        mCoordinatorTabLayout?.setTitle("Demo")
-                ?.setImageArray(mImageArray)
-                ?.setupWithViewPager(mViewPager)
-
-
-
-        // test
+        // awstest
         thread {
             try {
                 val credentialsProvider = AWSClient.getCredentialsProvider()
@@ -57,25 +40,48 @@ class TopActivity : AppCompatActivity() {
                 e.stackTrace
             }
         }
+    }
 
+    private fun setView() {
+        //Add the fragment to the viewpager
+        initFragments()
+        initViewPager()
+
+        //Image array
+        val mImageArray = intArrayOf(
+                R.mipmap.bg_android,
+                R.mipmap.bg_ios,
+                R.mipmap.bg_js,
+                R.mipmap.bg_other)
+
+        val mColorArray = intArrayOf(
+                android.R.color.holo_blue_light,
+                android.R.color.holo_red_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_green_light)
+
+        layout_top.setTitle("mochili")
+                .setImageArray(mImageArray, mColorArray)
+                .setupWithViewPager(viewpager_top)
     }
 
     private fun initFragments() {
-        mTitles.mapTo(mFragments) { TopFragment.getInstance(it) }
+        titles.mapTo(fragments) { TopFragment.getInstance(it) }
     }
 
     private fun initViewPager() {
-        val mViewPager = findViewById(R.id.vp) as ViewPager
-        mViewPager.offscreenPageLimit = 4
-        mViewPager.adapter = TopPagerAdapter(supportFragmentManager, mFragments as ArrayList<Fragment>, mTitles)
+        viewpager_top.offscreenPageLimit = 4
+        viewpager_top.adapter = TopPagerAdapter(supportFragmentManager, fragments as ArrayList<Fragment>, titles)
     }
+
+    //region MenuOptions
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
             finish()
         }
 
-        when (item.getItemId()) {
+        when (item.itemId) {
             R.id.action_about -> IntentUtils.openUrl(this, "https://github.com/hugeterry/CoordinatorTabLayout")
             R.id.action_about_me -> IntentUtils.openUrl(this, "http://hugeterry.cn/about")
         }
@@ -86,4 +92,6 @@ class TopActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.menu_main, menu)
         return super.onCreateOptionsMenu(menu)
     }
+
+    //endregion
 }

@@ -9,24 +9,24 @@ import android.support.v4.app.FragmentPagerAdapter
  */
 class TopPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
-    lateinit private var mFragments: ArrayList<Fragment>
-    lateinit private var mTitles: Array<String>
+    lateinit private var fragments: ArrayList<Fragment>
+    lateinit private var titles: Array<String>
 
-    constructor(fm: FragmentManager, mFragments: ArrayList<Fragment>, mTitles: Array<String>): this(fm) {
-        this.mFragments = mFragments
-        this.mTitles = mTitles
+    constructor(fm: FragmentManager, fragments: ArrayList<Fragment>, titles: Array<String>): this(fm) {
+        this.fragments = fragments
+        this.titles = titles
     }
 
 
     override fun getCount(): Int {
-        return mFragments.size
+        return fragments.size
     }
 
     override fun getPageTitle(position: Int): CharSequence {
-        return mTitles[position]
+        return titles[position]
     }
 
     override fun getItem(position: Int): Fragment {
-        return mFragments.get(position)
+        return fragments[position]
     }
 }

@@ -15,46 +15,42 @@ import jp.mochili.mochili.R
  */
 class TopFragment : Fragment() {
 
-    lateinit private var mRecyclerView: RecyclerView
-    private var mDatas: MutableList<String> = mutableListOf()
+    lateinit private var title: String
+    private var dataList: MutableList<String> = mutableListOf()
 
-
-    private var mTitle: String? = null
-
-
-
+    // instance生成メソッド
     companion object {
         const val ARG_TITLE = "title"
         fun getInstance(title: String): TopFragment {
-            val fra = TopFragment()
+            val fragment = TopFragment()
             val bundle = Bundle()
             bundle.putString(ARG_TITLE, title)
-            fra.arguments = bundle
-            return fra
+            fragment.arguments = bundle
+            return fragment
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val bundle = arguments
-        mTitle = bundle.getString(ARG_TITLE)
+        title = bundle.getString(ARG_TITLE)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val v = inflater.inflate(R.layout.fragment_main, container, false)
+        val view = inflater.inflate(R.layout.fragment_top, container, false)
 
         initData()
-        mRecyclerView = v.findViewById(R.id.recyclerview) as RecyclerView
-        mRecyclerView.layoutManager = LinearLayoutManager(mRecyclerView.context)
-        mRecyclerView.adapter = TopRecyclerAdapter(mRecyclerView.context, mDatas)
+        val recyclerView = view.findViewById(R.id.recyclerview_top) as RecyclerView
+        recyclerView.layoutManager = LinearLayoutManager(recyclerView.context)
+        recyclerView.adapter = TopRecyclerAdapter(recyclerView.context, dataList)
 
-        return v
+        return view
     }
 
     private fun initData() {
-        var i: Int = 1
+        var i = 1
         while (i < 20) {
-            (mDatas as ArrayList<String>).add(mTitle + i.toChar())
+            (dataList as ArrayList<String>).add(title + i.toChar())
             i++
         }
     }

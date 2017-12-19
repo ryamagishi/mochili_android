@@ -12,13 +12,14 @@ import android.support.v4.app.Fragment
 import android.view.Menu
 import android.view.MenuItem
 import jp.mochili.mochili.model.IntentUtils
+import jp.mochili.mochili.model.TopFragmentEnum
 import kotlinx.android.synthetic.main.activity_top.*
 
 
 class TopActivity : AppCompatActivity() {
 
     private val fragments: MutableList<Fragment> = mutableListOf()
-    private val titles = arrayOf("持ち物リスト", "友達", "Web", "Other")
+    lateinit private var titles: Array<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,25 +44,27 @@ class TopActivity : AppCompatActivity() {
     }
 
     private fun setView() {
+        // Title array
+        val titleList = mutableListOf<String>()
+        TopFragmentEnum.values().mapTo(titleList) { it.title }
+        titles = titleList.toTypedArray()
+
+        // Image array
+        val imageList = mutableListOf<Int>()
+        TopFragmentEnum.values().mapTo(imageList) { it.image }
+        val images = imageList.toIntArray()
+
+        // Color Array
+        val colorList = mutableListOf<Int>()
+        TopFragmentEnum.values().mapTo(colorList) { it.color }
+        val colors = colorList.toIntArray()
+
         //Add the fragment to the viewpager
         initFragments()
         initViewPager()
 
-        //Image array
-        val mImageArray = intArrayOf(
-                R.mipmap.bg_android,
-                R.mipmap.bg_ios,
-                R.mipmap.bg_js,
-                R.mipmap.bg_other)
-
-        val mColorArray = intArrayOf(
-                android.R.color.holo_blue_light,
-                android.R.color.holo_red_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_green_light)
-
         layout_top.setTitle("mochili")
-                .setImageArray(mImageArray, mColorArray)
+                .setImageArray(images, colors)
                 .setupWithViewPager(viewpager_top)
     }
 
@@ -70,7 +73,7 @@ class TopActivity : AppCompatActivity() {
     }
 
     private fun initViewPager() {
-        viewpager_top.offscreenPageLimit = 4
+        viewpager_top.offscreenPageLimit = TopFragmentEnum.values().size
         viewpager_top.adapter = TopPagerAdapter(supportFragmentManager, fragments as ArrayList<Fragment>, titles)
     }
 

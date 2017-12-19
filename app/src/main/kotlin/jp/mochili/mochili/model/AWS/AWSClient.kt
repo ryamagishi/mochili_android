@@ -14,7 +14,7 @@ object AWSClient {
     // Cognitoの認証
     fun initCognito(){
         credentialsProvider = CognitoCachingCredentialsProvider(
-                getApplicationInstance()?.getApplicationContext(), // Context
+                getApplicationInstance().applicationContext, // Context
                 "ap-northeast-1:310fdab8-aa89-4c9e-ab6b-4eaabac06754", // Identity Pool ID
                 Regions.AP_NORTHEAST_1 // Region
         )

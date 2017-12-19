@@ -12,8 +12,8 @@ import jp.mochili.mochili.R
 /**
  * Created by ryotayamagishi on 2017/11/28.
  */
-class TopRecyclerAdapter(private val context: Context, private val dataList: List<String>):
-        RecyclerView.Adapter<TopRecyclerAdapter.MyViewHolder>() {
+class TopRecyclerAdapter(private val context: Context, private val dataList: List<String>)
+    : RecyclerView.Adapter<TopRecyclerAdapter.MyViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         return MyViewHolder(LayoutInflater

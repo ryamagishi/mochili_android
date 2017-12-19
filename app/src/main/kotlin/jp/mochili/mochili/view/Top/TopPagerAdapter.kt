@@ -12,7 +12,8 @@ class TopPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
     lateinit private var fragments: ArrayList<Fragment>
     lateinit private var titles: Array<String>
 
-    constructor(fm: FragmentManager, fragments: ArrayList<Fragment>, titles: Array<String>): this(fm) {
+    constructor(fragmentManager: FragmentManager, fragments: ArrayList<Fragment>, titles: Array<String>)
+            : this(fragmentManager) {
         this.fragments = fragments
         this.titles = titles
     }

@@ -50,7 +50,7 @@ class TopFragment : Fragment() {
     private fun initData() {
         var i = 1
         while (i < 20) {
-            (dataList as ArrayList<String>).add(title + i.toChar())
+            (dataList as ArrayList<String>).add(title)
             i++
         }
     }

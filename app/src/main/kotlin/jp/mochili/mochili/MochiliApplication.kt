@@ -10,9 +10,9 @@ import kotlin.concurrent.thread
  * Created by ryotayamagishi on 2017/11/21.
  */
 
-private var instance: MochiliApplication? = null
+lateinit private var instance: MochiliApplication
 
-fun getApplicationInstance(): MochiliApplication? = instance
+fun getApplicationInstance(): MochiliApplication = instance
 
 class MochiliApplication : Application() {
 

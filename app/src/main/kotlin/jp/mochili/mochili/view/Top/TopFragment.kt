@@ -15,16 +15,16 @@ import jp.mochili.mochili.R
  */
 class TopFragment : Fragment() {
 
-    lateinit private var title: String
+    lateinit private var fragmentEnum: TopActivity.FragmentEnum
     private var dataList: MutableList<String> = mutableListOf()
 
     // instance生成メソッド
     companion object {
-        const val ARG_TITLE = "title"
-        fun getInstance(title: String): TopFragment {
+        const val FRAGMENT_ENUM = "fragment_enum"
+        fun getInstance(topFragmentEnum: TopActivity.FragmentEnum): TopFragment {
             val fragment = TopFragment()
             val bundle = Bundle()
-            bundle.putString(ARG_TITLE, title)
+            bundle.putSerializable(FRAGMENT_ENUM, topFragmentEnum)
             fragment.arguments = bundle
             return fragment
         }
@@ -33,7 +33,7 @@ class TopFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val bundle = arguments
-        title = bundle.getString(ARG_TITLE)
+        fragmentEnum = bundle.getSerializable(FRAGMENT_ENUM) as TopActivity.FragmentEnum
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -50,7 +50,7 @@ class TopFragment : Fragment() {
     private fun initData() {
         var i = 1
         while (i < 20) {
-            (dataList as ArrayList<String>).add(title)
+            (dataList as ArrayList<String>).add(fragmentEnum.title)
             i++
         }
     }

@@ -12,14 +12,18 @@ import android.support.v4.app.Fragment
 import android.view.Menu
 import android.view.MenuItem
 import jp.mochili.mochili.model.IntentUtils
-import jp.mochili.mochili.model.TopFragmentEnum
 import kotlinx.android.synthetic.main.activity_top.*
-
 
 class TopActivity : AppCompatActivity() {
 
     private val fragments: MutableList<Fragment> = mutableListOf()
     lateinit private var titles: Array<String>
+
+    // viewpagerを管理するenum
+    enum class FragmentEnum(val id: Int, val title: String, val image: Int, val color: Int) {
+        MOCHILIS(1, "持ち物リスト", R.mipmap.bg_android, android.R.color.holo_blue_light),
+        FRIENDS(2, "友だち", R.mipmap.bg_ios, android.R.color.holo_red_light);
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,17 +50,17 @@ class TopActivity : AppCompatActivity() {
     private fun setView() {
         // Title array
         val titleList = mutableListOf<String>()
-        TopFragmentEnum.values().mapTo(titleList) { it.title }
+        FragmentEnum.values().mapTo(titleList) { it.title }
         titles = titleList.toTypedArray()
 
         // Image array
         val imageList = mutableListOf<Int>()
-        TopFragmentEnum.values().mapTo(imageList) { it.image }
+        FragmentEnum.values().mapTo(imageList) { it.image }
         val images = imageList.toIntArray()
 
         // Color Array
         val colorList = mutableListOf<Int>()
-        TopFragmentEnum.values().mapTo(colorList) { it.color }
+        FragmentEnum.values().mapTo(colorList) { it.color }
         val colors = colorList.toIntArray()
 
         //Add the fragment to the viewpager
@@ -69,11 +73,11 @@ class TopActivity : AppCompatActivity() {
     }
 
     private fun initFragments() {
-        titles.mapTo(fragments) { TopFragment.getInstance(it) }
+        FragmentEnum.values().mapTo(fragments) { TopFragment.getInstance(it) }
     }
 
     private fun initViewPager() {
-        viewpager_top.offscreenPageLimit = TopFragmentEnum.values().size
+        viewpager_top.offscreenPageLimit = FragmentEnum.values().size
         viewpager_top.adapter = TopPagerAdapter(supportFragmentManager, fragments as ArrayList<Fragment>, titles)
     }
 

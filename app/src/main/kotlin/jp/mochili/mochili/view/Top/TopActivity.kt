@@ -30,21 +30,6 @@ class TopActivity : AppCompatActivity() {
         setContentView(R.layout.activity_top)
 
         setView()
-
-        // awstest
-        thread {
-            try {
-                val credentialsProvider = AWSClient.getCredentialsProvider()
-                val client = ApiClientFactory()
-                        .credentialsProvider(credentialsProvider)
-                        .build<MochiliClient>(MochiliClient::class.java)
-                val mochilis = client.mymochilisGet("Karl")
-                val mochili = mochilis[0]
-                Log.d("test", mochili.mochiliId)
-            } catch(e: Exception) {
-                e.stackTrace
-            }
-        }
     }
 
     private fun setView() {

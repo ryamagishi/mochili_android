@@ -4,10 +4,16 @@ import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.os.Bundle
+import android.os.Handler
 import android.view.ViewGroup
 import android.view.LayoutInflater
 import android.view.View
+import com.amazonaws.mobileconnectors.apigateway.ApiClientFactory
 import jp.mochili.mochili.R
+import jp.mochili.mochili.model.AWS.AWSClient
+import jp.mochili.mochili.model.apigateway.MochiliClient
+import jp.mochili.mochili.view.Top.TopActivity.FragmentEnum
+import kotlin.concurrent.thread
 
 
 /**
@@ -15,12 +21,14 @@ import jp.mochili.mochili.R
  */
 class TopFragment : Fragment() {
 
+    val handler = Handler()
     lateinit private var fragmentEnum: TopActivity.FragmentEnum
+    lateinit private var recyclerView: RecyclerView
     private var dataList: MutableList<String> = mutableListOf()
 
-    // instance生成メソッド
     companion object {
         const val FRAGMENT_ENUM = "fragment_enum"
+        // instance生成メソッド
         fun getInstance(topFragmentEnum: TopActivity.FragmentEnum): TopFragment {
             val fragment = TopFragment()
             val bundle = Bundle()
@@ -39,19 +47,42 @@ class TopFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_top, container, false)
 
-        initData()
-        val recyclerView = view.findViewById(R.id.recyclerview_top) as RecyclerView
+        recyclerView = view.findViewById(R.id.recyclerview_top) as RecyclerView
         recyclerView.layoutManager = LinearLayoutManager(recyclerView.context)
-        recyclerView.adapter = TopRecyclerAdapter(recyclerView.context, dataList)
+        initData()
 
         return view
     }
 
+    // dataListにデータを格納
     private fun initData() {
-        var i = 1
-        while (i < 20) {
-            (dataList as ArrayList<String>).add(fragmentEnum.title)
-            i++
+        when (fragmentEnum) {
+            FragmentEnum.MOCHILIS -> {
+                thread {
+                    try {
+                        val credentialsProvider = AWSClient.getCredentialsProvider()
+                        val client = ApiClientFactory()
+                                .credentialsProvider(credentialsProvider)
+                                .build<MochiliClient>(MochiliClient::class.java)
+                        val mochilis = client.mymochilisGet("Karl")
+                        mochilis.mapTo(dataList) { it.mochiliName }
+
+                        handler.post {
+                            recyclerView.adapter = MochiliRecyclerAdapter(recyclerView.context, dataList)
+                        }
+                    } catch(e: Exception) {
+                        e.stackTrace
+                    }
+                }
+            }
+            FragmentEnum.FRIENDS -> {
+                var i = 1
+                while (i < 20) {
+                    (dataList as ArrayList<String>).add(fragmentEnum.title)
+                    i++
+                }
+                recyclerView.adapter = FriendRecyclerAdapter(recyclerView.context, dataList)
+            }
         }
     }
 }

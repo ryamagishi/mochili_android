@@ -23,6 +23,8 @@ class MochiliApplication : Application() {
         instance = this
         // cognito情報認証
         AWSClient.initCognito()
+        // realmの初期化
+
 
         thread { Log.d("cognitoId", AWSClient.getCredentialsProvider().identityId) }
     }

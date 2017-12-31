@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">mochili</string>
+    <string name="additem">addItem</string>
 </resources>

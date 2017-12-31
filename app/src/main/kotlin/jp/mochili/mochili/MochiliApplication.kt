@@ -3,6 +3,8 @@ package jp.mochili.mochili
 import android.app.Application
 import jp.mochili.mochili.model.AWS.AWSClient
 import android.util.Log
+import io.realm.Realm
+import io.realm.RealmConfiguration
 import kotlin.concurrent.thread
 
 
@@ -24,8 +26,8 @@ class MochiliApplication : Application() {
         // cognito情報認証
         AWSClient.initCognito()
         // realmの初期化
-
-
-        thread { Log.d("cognitoId", AWSClient.getCredentialsProvider().identityId) }
+        Realm.init(this)
+        val realmConfiguration = RealmConfiguration.Builder().build()
+        Realm.setDefaultConfiguration(realmConfiguration)
     }
 }

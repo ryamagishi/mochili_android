@@ -2,17 +2,17 @@ package jp.mochili.mochili.view.Top
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import jp.mochili.mochili.R
-import com.amazonaws.mobileconnectors.apigateway.ApiClientFactory
-import jp.mochili.mochili.model.AWS.AWSClient
-import jp.mochili.mochili.model.apigateway.MochiliClient
-import kotlin.concurrent.thread
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import jp.mochili.mochili.model.IntentUtils
+import io.realm.Realm
+import jp.mochili.mochili.Utils.IntentUtils
+import jp.mochili.mochili.model.AWS.AWSClient
+import jp.mochili.mochili.model.User
 import kotlinx.android.synthetic.main.activity_top.*
+import kotlin.concurrent.thread
 
 class TopActivity : AppCompatActivity() {
 
@@ -29,9 +29,14 @@ class TopActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_top)
 
+        // UserId登録済かチェック
+        checkRegister()
+
+        // fragmentをセット
         setView()
     }
 
+    //region Fragment関連
     private fun setView() {
         // Title array
         val titleList = mutableListOf<String>()
@@ -65,6 +70,7 @@ class TopActivity : AppCompatActivity() {
         viewpager_top.offscreenPageLimit = FragmentEnum.values().size
         viewpager_top.adapter = TopPagerAdapter(supportFragmentManager, fragments as ArrayList<Fragment>, titles)
     }
+    //endregion
 
     //region MenuOptions
 
@@ -85,5 +91,24 @@ class TopActivity : AppCompatActivity() {
         return super.onCreateOptionsMenu(menu)
     }
 
+    //endregion
+
+    //region UserRegister確認
+    // 登録されていなければ新規登録、登録されていればcognitoId更新
+    private fun checkRegister() {
+        val realm = Realm.getDefaultInstance()
+        val user = realm.where(User::class.java).findFirst()
+        if(user == null) {
+
+            realm.close()
+        } else {
+            thread {
+                realm.beginTransaction()
+                user.cognitoId = AWSClient.getCredentialsProvider().identityId
+                realm.commitTransaction()
+                realm.close()
+            }
+        }
+    }
     //endregion
 }

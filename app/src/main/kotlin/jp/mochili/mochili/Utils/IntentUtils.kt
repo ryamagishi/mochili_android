@@ -1,4 +1,4 @@
-package jp.mochili.mochili.model
+package jp.mochili.mochili.Utils
 
 import android.content.Context
 import android.support.v4.content.ContextCompat.startActivity

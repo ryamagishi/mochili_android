@@ -12,7 +12,7 @@ object AWSClient {
     private lateinit var credentialsProvider: CognitoCachingCredentialsProvider
 
     // Cognitoの認証
-    fun initCognito(){
+    fun initCognito() {
         credentialsProvider = CognitoCachingCredentialsProvider(
                 getApplicationInstance().applicationContext, // Context
                 "ap-northeast-1:310fdab8-aa89-4c9e-ab6b-4eaabac06754", // Identity Pool ID

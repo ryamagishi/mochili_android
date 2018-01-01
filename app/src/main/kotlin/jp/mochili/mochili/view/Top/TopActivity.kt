@@ -1,16 +1,16 @@
 package jp.mochili.mochili.view.Top
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import jp.mochili.mochili.R
 import android.support.v4.app.Fragment
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import io.realm.Realm
-import jp.mochili.mochili.Utils.IntentUtils
 import jp.mochili.mochili.model.AWS.AWSClient
 import jp.mochili.mochili.model.User
+import jp.mochili.mochili.view.SettingActivity
 import kotlinx.android.synthetic.main.activity_top.*
 import kotlin.concurrent.thread
 
@@ -80,14 +80,17 @@ class TopActivity : AppCompatActivity() {
         }
 
         when (item.itemId) {
-            R.id.action_about -> IntentUtils.openUrl(this, "https://github.com/hugeterry/CoordinatorTabLayout")
-            R.id.action_about_me -> IntentUtils.openUrl(this, "http://hugeterry.cn/about")
+            R.id.setting -> {
+                val intent = Intent(this, SettingActivity::class.java)
+                startActivity(intent)
+            }
+            R.id.library -> {}
         }
         return super.onOptionsItemSelected(item)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_main, menu)
+        menuInflater.inflate(R.menu.menu_top, menu)
         return super.onCreateOptionsMenu(menu)
     }
 

@@ -16,5 +16,6 @@ class SettingActivity : AppCompatActivity() {
     private fun setView() {
         setSupportActionBar(my_toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = "設定"
     }
 }

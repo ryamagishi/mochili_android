@@ -1,18 +1,14 @@
 package jp.mochili.mochili.view
 
-import android.app.PendingIntent.getActivity
-import android.content.Context
 import android.databinding.DataBindingUtil
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
 import android.text.InputType
 import android.view.MenuItem
 import jp.mochili.mochili.R
 import jp.mochili.mochili.databinding.ActivitySettingBinding
 import jp.mochili.mochili.viewmodel.SettingViewModel
 import kotlinx.android.synthetic.main.activity_setting.*
-import android.content.DialogInterface
 import jp.mochili.mochili.utils.DialogUtils
 
 

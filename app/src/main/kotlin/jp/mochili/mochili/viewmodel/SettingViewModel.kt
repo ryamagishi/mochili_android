@@ -2,9 +2,15 @@ package jp.mochili.mochili.viewmodel
 
 import android.content.DialogInterface
 import android.databinding.ObservableField
+import android.util.Log
+import com.amazonaws.mobileconnectors.apigateway.ApiClientFactory
 import io.realm.Realm
 import jp.mochili.mochili.contract.SettingViewContract
+import jp.mochili.mochili.model.AWS.AWSClient
 import jp.mochili.mochili.model.User
+import jp.mochili.mochili.model.apigateway.MochiliClient
+import jp.mochili.mochili.view.Top.MochiliRecyclerAdapter
+import kotlin.concurrent.thread
 
 /**
  * Created by ryotayamagishi on 2018/01/01.
@@ -53,6 +59,18 @@ class SettingViewModel(val view: SettingViewContract) {
 
     // userIdが一意のものであるかをチェック
     private fun checkUniqueId(): Boolean {
+        thread {
+            try {
+                val credentialsProvider = AWSClient.getCredentialsProvider()
+                val client = ApiClientFactory()
+                        .credentialsProvider(credentialsProvider)
+                        .build<MochiliClient>(MochiliClient::class.java)
+                val user = client.userGet("Karl")
+                Log.d("test--", user?.userId ?: "nullだよ")
+            } catch(e: Exception) {
+                e.stackTrace
+            }
+        }
         return true
     }
 

@@ -1,17 +1,20 @@
 package jp.mochili.mochili.viewmodel
 
-import android.content.Context
+import android.content.DialogInterface
 import android.databinding.ObservableField
 import io.realm.Realm
+import jp.mochili.mochili.contract.SettingViewContract
 import jp.mochili.mochili.model.User
 
 /**
  * Created by ryotayamagishi on 2018/01/01.
  */
-class SettingViewModel(val context: Context) {
+class SettingViewModel(val view: SettingViewContract) {
 
+    // databinding
     val userId = ObservableField<String>()
     val userName = ObservableField<String>()
+
     private var lastUserId: String
     private var lastUserName: String
     private lateinit var updatedUserId: String
@@ -57,4 +60,24 @@ class SettingViewModel(val context: Context) {
 
         }
     }
+
+    //region dialog
+    fun firstDialog() {
+        val title = "はじめに"
+        val message = """
+                ユーザーIDとユーザー名を登録しましょう！
+                （ユーザーIDは変更できないので注意してください。）
+            """.trimIndent()
+        view.showDialog(title, message)
+    }
+
+    fun confirmDialog(positiveEvent: (dialog: DialogInterface, which: Int) -> Unit) {
+        val title = "注意"
+        val message = """
+                    ユーザーIDは変更できません。
+                    ${updatedUserId}で大丈夫ですか？
+                    """.trimIndent()
+        view.showDialog(title, message, positiveEvent)
+    }
+    //endregion
 }

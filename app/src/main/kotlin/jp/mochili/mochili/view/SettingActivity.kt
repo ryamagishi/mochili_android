@@ -1,18 +1,20 @@
 package jp.mochili.mochili.view
 
+import android.content.DialogInterface
 import android.databinding.DataBindingUtil
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.text.InputType
 import android.view.MenuItem
 import jp.mochili.mochili.R
+import jp.mochili.mochili.contract.SettingViewContract
 import jp.mochili.mochili.databinding.ActivitySettingBinding
 import jp.mochili.mochili.viewmodel.SettingViewModel
 import kotlinx.android.synthetic.main.activity_setting.*
 import jp.mochili.mochili.utils.DialogUtils
 
 
-class SettingActivity : AppCompatActivity() {
+class SettingActivity : AppCompatActivity(), SettingViewContract {
 
     private lateinit var viewModel: SettingViewModel
     private var isFirst = false
@@ -55,13 +57,7 @@ class SettingActivity : AppCompatActivity() {
         if (isFirst) {
             user_id_edit.setRawInputType(
                     InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS)
-
-            val title = "はじめに"
-            val message = """
-                ユーザーIDとユーザー名を登録しましょう！
-                （ユーザーIDは変更できないので注意してください。）
-            """.trimIndent()
-            DialogUtils.showDialog(this, title, message)
+            viewModel.firstDialog()
         } else {
             user_id_edit.isFocusable = false
         }
@@ -71,12 +67,7 @@ class SettingActivity : AppCompatActivity() {
     private fun checkChange() {
         if (viewModel.checkChange(isFirst)) {
             if (isFirst) {
-                val title = "注意"
-                val message = """
-                    ユーザーIDは変更できません。
-                    ${user_id_edit.text}で大丈夫ですか？
-                    """.trimIndent()
-                DialogUtils.showDialog(this, title, message) { _, _ ->
+                viewModel.confirmDialog { _, _ ->
                     viewModel.saveChange(isFirst)
                     super.onBackPressed()
                 }
@@ -86,4 +77,17 @@ class SettingActivity : AppCompatActivity() {
             }
         }
     }
+
+    //region SettingViewContract
+    // dialogを表示
+    override fun showDialog(title: String, message: String) {
+        DialogUtils.showDialog(this, title, message)
+    }
+
+    // positiveEventのあるdialogを表示
+    override fun showDialog(title: String, message: String,
+                   positiveEvent: (dialog: DialogInterface, which: Int) -> Unit) {
+        DialogUtils.showDialog(this, title, message, positiveEvent)
+    }
+    //endregion
 }

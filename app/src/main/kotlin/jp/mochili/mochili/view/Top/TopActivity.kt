@@ -75,10 +75,6 @@ class TopActivity : AppCompatActivity() {
     //region MenuOptions
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
-            finish()
-        }
-
         when (item.itemId) {
             R.id.setting -> {
                 val intent = Intent(this, SettingActivity::class.java)
@@ -102,7 +98,9 @@ class TopActivity : AppCompatActivity() {
         val realm = Realm.getDefaultInstance()
         val user = realm.where(User::class.java).findFirst()
         if(user == null) {
-
+            val intent = Intent(this, SettingActivity::class.java)
+            intent.putExtra("isFirst", true)
+            startActivity(intent)
             realm.close()
         } else {
             thread {

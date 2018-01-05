@@ -37,7 +37,16 @@ class SettingViewModel(val view: SettingViewContract) {
         updatedUserName = userName.get().trim()
 
         if (isFirst or (lastUserId != updatedUserId) or (lastUserName != updatedUserName)) {
-            return checkUniqueId()
+            return if (checkFormat()) checkUniqueId() else false
+        }
+        return true
+    }
+
+    // userId,userNameが正しい書式であるかをチェック
+    private fun checkFormat(): Boolean {
+        if (updatedUserId.isEmpty() or updatedUserName.isEmpty()) {
+            formatDialog()
+            return false
         }
         return true
     }
@@ -62,6 +71,14 @@ class SettingViewModel(val view: SettingViewContract) {
         val message = """
                 ユーザーIDとユーザー名を登録しましょう！
                 （ユーザーIDは変更できないので注意してください。）
+            """.trimIndent()
+        view.showDialog(title, message)
+    }
+
+    private fun formatDialog() {
+        val title = "注意"
+        val message = """
+            ユーザーID,ユーザー名は1〜12文字にしてください。
             """.trimIndent()
         view.showDialog(title, message)
     }

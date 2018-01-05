@@ -1,7 +1,6 @@
-package jp.mochili.mochili.Utils
+package jp.mochili.mochili.utils
 
 import android.content.Context
-import android.support.v4.content.ContextCompat.startActivity
 import android.content.Intent
 import android.net.Uri
 

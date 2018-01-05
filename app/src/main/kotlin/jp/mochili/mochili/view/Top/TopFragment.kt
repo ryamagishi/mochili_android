@@ -41,7 +41,7 @@ class TopFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val bundle = arguments
-        fragmentEnum = bundle.getSerializable(FRAGMENT_ENUM) as TopActivity.FragmentEnum
+        fragmentEnum = bundle?.getSerializable(FRAGMENT_ENUM) as TopActivity.FragmentEnum
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

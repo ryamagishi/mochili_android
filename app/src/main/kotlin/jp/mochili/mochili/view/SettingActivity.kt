@@ -12,6 +12,10 @@ import jp.mochili.mochili.databinding.ActivitySettingBinding
 import jp.mochili.mochili.viewmodel.SettingViewModel
 import kotlinx.android.synthetic.main.activity_setting.*
 import jp.mochili.mochili.utils.DialogUtils
+import android.text.InputFilter
+import android.text.Spanned
+
+
 
 
 class SettingActivity : AppCompatActivity(), SettingViewContract {
@@ -52,11 +56,16 @@ class SettingActivity : AppCompatActivity(), SettingViewContract {
         checkChange()
     }
 
-    // アプリ初回に来た時にはID,nameを登録してほしい旨のダイアログを表示
+    // アプリ初回に来た時にはID,nameを登録してほしい旨のダイアログを表示(idのinputを英数字に制限)
     private fun checkFirst() {
         if (isFirst) {
             user_id_edit.setRawInputType(
                     InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS)
+            val inputFilter = InputFilter { source, _, _, _, _, _ ->
+                if (source.toString().matches("^[0-9a-zA-Z]+$".toRegex())) { source } else { "" }
+            }
+            val filters = arrayOf(inputFilter)
+            user_id_edit.filters = filters.plus(InputFilter.LengthFilter(12))
             viewModel.firstDialog()
         } else {
             user_id_edit.isFocusable = false

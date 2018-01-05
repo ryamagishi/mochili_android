@@ -66,6 +66,7 @@
             android:ems="10"
             android:inputType="textPersonName"
             android:text="@={viewmodel.userName}"
+            android:maxLength="12"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView2" />
 

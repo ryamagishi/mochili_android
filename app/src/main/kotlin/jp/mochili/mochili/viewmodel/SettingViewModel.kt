@@ -33,17 +33,12 @@ class SettingViewModel(val view: SettingViewContract) {
 
     // 変更したかどうか、変更があった場合は問題ないかどうかをチェックしてdialogを表示
     fun checkChange(isFirst: Boolean): Boolean {
-        updatedUserId = userId.get()
-        updatedUserName = userName.get()
+        updatedUserId = userId.get().trim()
+        updatedUserName = userName.get().trim()
 
         if (isFirst or (lastUserId != updatedUserId) or (lastUserName != updatedUserName)) {
-            return if (checkFormat()) checkUniqueId() else false
+            return checkUniqueId()
         }
-        return true
-    }
-
-    // userId,userNameが正しい書式であるかをチェック
-    private fun checkFormat(): Boolean {
         return true
     }
 

@@ -2,6 +2,7 @@ package jp.mochili.mochili.viewmodel
 
 import android.content.DialogInterface
 import android.databinding.ObservableField
+import android.os.Handler
 import android.util.Log
 import com.amazonaws.mobileconnectors.apigateway.ApiClientFactory
 import io.realm.Realm
@@ -9,7 +10,6 @@ import jp.mochili.mochili.contract.SettingViewContract
 import jp.mochili.mochili.model.AWS.AWSClient
 import jp.mochili.mochili.model.User
 import jp.mochili.mochili.model.apigateway.MochiliClient
-import jp.mochili.mochili.view.Top.MochiliRecyclerAdapter
 import kotlin.concurrent.thread
 
 /**
@@ -21,6 +21,7 @@ class SettingViewModel(val view: SettingViewContract) {
     val userId = ObservableField<String>()
     val userName = ObservableField<String>()
 
+    private val handler: Handler = Handler()
     private var lastUserId: String
     private var lastUserName: String
     private lateinit var updatedUserId: String
@@ -38,14 +39,18 @@ class SettingViewModel(val view: SettingViewContract) {
     }
 
     // 変更したかどうか、変更があった場合は問題ないかどうかをチェックしてdialogを表示
-    fun checkChange(isFirst: Boolean): Boolean {
+    fun checkChange(isFirst: Boolean, checkedFun: () -> Unit) {
         updatedUserId = userId.get().trim()
         updatedUserName = userName.get().trim()
 
-        if (isFirst or (lastUserId != updatedUserId) or (lastUserName != updatedUserName)) {
-            return if (checkFormat()) checkUniqueId() else false
+        // 変化したかどうか（初回時は絶対に変化したとする）
+        val isChanged = isFirst or (lastUserId != updatedUserId) or (lastUserName != updatedUserName)
+        // 変化した場合は問題ないかcheck, 変化してない場合は何もせず前の画面に戻る
+        if (isChanged) {
+            if (checkFormat()) checkUniqueId(checkedFun)
+        } else {
+            view.onSuperBack()
         }
-        return true
     }
 
     // userId,userNameが正しい書式であるかをチェック
@@ -58,7 +63,7 @@ class SettingViewModel(val view: SettingViewContract) {
     }
 
     // userIdが一意のものであるかをチェック
-    private fun checkUniqueId(): Boolean {
+    private fun checkUniqueId(checkedFun: () -> Unit) {
         thread {
             try {
                 val credentialsProvider = AWSClient.getCredentialsProvider()
@@ -67,11 +72,11 @@ class SettingViewModel(val view: SettingViewContract) {
                         .build<MochiliClient>(MochiliClient::class.java)
                 val user = client.userGet("Karl")
                 Log.d("test--", user?.userId ?: "nullだよ")
+                handler.post(checkedFun)
             } catch(e: Exception) {
                 e.stackTrace
             }
         }
-        return true
     }
 
     // realm及びサーバーに変更を保存

@@ -2,18 +2,17 @@ package jp.mochili.mochili.view
 
 import android.content.DialogInterface
 import android.databinding.DataBindingUtil
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
+import android.text.InputFilter
 import android.text.InputType
 import android.view.MenuItem
 import jp.mochili.mochili.R
 import jp.mochili.mochili.contract.SettingViewContract
 import jp.mochili.mochili.databinding.ActivitySettingBinding
+import jp.mochili.mochili.utils.DialogUtils
 import jp.mochili.mochili.viewmodel.SettingViewModel
 import kotlinx.android.synthetic.main.activity_setting.*
-import jp.mochili.mochili.utils.DialogUtils
-import android.text.InputFilter
-import android.text.Spanned
 
 
 
@@ -74,7 +73,8 @@ class SettingActivity : AppCompatActivity(), SettingViewContract {
 
     // ID,Nameの変化をcheckして問題なければsaveして戻る
     private fun checkChange() {
-        if (viewModel.checkChange(isFirst)) {
+        viewModel.checkChange(isFirst) {
+            // checkChangeが問題なかった場合に以下のメソッドが実行
             if (isFirst) {
                 viewModel.confirmDialog { _, _ ->
                     viewModel.saveChange(isFirst)
@@ -88,6 +88,11 @@ class SettingActivity : AppCompatActivity(), SettingViewContract {
     }
 
     //region SettingViewContract
+    // Back
+    override fun onSuperBack() {
+        super.onBackPressed()
+    }
+
     // dialogを表示
     override fun showDialog(title: String, message: String) {
         DialogUtils.showDialog(this, title, message)

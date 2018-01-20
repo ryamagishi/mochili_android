@@ -3,7 +3,6 @@ package jp.mochili.mochili.viewmodel
 import android.content.DialogInterface
 import android.databinding.ObservableField
 import android.os.Handler
-import android.util.Log
 import com.amazonaws.mobileconnectors.apigateway.ApiClientFactory
 import io.realm.Realm
 import jp.mochili.mochili.contract.SettingViewContract
@@ -70,9 +69,8 @@ class SettingViewModel(val view: SettingViewContract) {
                 val client = ApiClientFactory()
                         .credentialsProvider(credentialsProvider)
                         .build<MochiliClient>(MochiliClient::class.java)
-                val user = client.userGet("Karl")
-                Log.d("test--", user?.userId ?: "nullだよ")
-                handler.post(checkedFun)
+                val user = client.userGet(updatedUserId)
+                if (user.userId == null) handler.post(checkedFun) else handler.post{ uniqueIdDialog() }
             } catch(e: Exception) {
                 e.stackTrace
             }
@@ -113,6 +111,14 @@ class SettingViewModel(val view: SettingViewContract) {
                     ${updatedUserId}で大丈夫ですか？
                     """.trimIndent()
         view.showDialog(title, message, positiveEvent)
+    }
+
+    private fun uniqueIdDialog() {
+        val title = "注意"
+        val message = """
+            ${updatedUserId}は使われています。他のユーザーIDをご入力下さい。
+            """.trimIndent()
+        view.showDialog(title, message)
     }
     //endregion
 }

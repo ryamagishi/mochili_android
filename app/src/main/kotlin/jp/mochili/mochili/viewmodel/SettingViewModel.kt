@@ -3,6 +3,7 @@ package jp.mochili.mochili.viewmodel
 import android.content.DialogInterface
 import android.databinding.ObservableField
 import android.os.Handler
+import android.util.Log
 import com.amazonaws.mobileconnectors.apigateway.ApiClientFactory
 import io.realm.Realm
 import jp.mochili.mochili.contract.SettingViewContract
@@ -10,6 +11,8 @@ import jp.mochili.mochili.model.AWS.AWSClient
 import jp.mochili.mochili.model.User
 import jp.mochili.mochili.model.apigateway.MochiliClient
 import kotlin.concurrent.thread
+import jp.mochili.mochili.model.apigateway.model.User as AWSUser
+import kotlin.concurrent.thread as AWSUser
 
 /**
  * Created by ryotayamagishi on 2018/01/01.
@@ -80,9 +83,39 @@ class SettingViewModel(val view: SettingViewContract) {
     // realm及びサーバーに変更を保存
     fun saveChange(isFirst: Boolean) {
         if (isFirst) {
-
+            thread {
+                try {
+                    val credentialsProvider = AWSClient.getCredentialsProvider()
+                    val client = ApiClientFactory()
+                            .credentialsProvider(credentialsProvider)
+                            .build<MochiliClient>(MochiliClient::class.java)
+                    val awsUser = AWSUser()
+                    awsUser.userId = updatedUserId
+                    awsUser.userName = updatedUserName
+                    awsUser.cognitoId = "test"
+                    awsUser.password = "p"
+                    val result = client.userPost(awsUser)
+                    Log.d("awsResult", result.status + "****" + result.detail)
+                } catch(e: Exception) {
+                    e.stackTrace
+                }
+            }
+//            val realm = Realm.getDefaultInstance()
+//            realm.beginTransaction()
+//            val user = User()
+//            user.userId = updatedUserId
+//            user.userName = updatedUserName
+//            user.cognitoId = "test"
+//            realm.copyToRealmOrUpdate(user)
+//            realm.commitTransaction()
+//            realm.close()
         } else {
-
+//            val realm = Realm.getDefaultInstance()
+//            realm.beginTransaction()
+//            val user = realm.where(User::class.java).findFirst()
+//            user?.userName = updatedUserName
+//            realm.commitTransaction()
+//            realm.close()
         }
     }
 

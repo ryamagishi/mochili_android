@@ -8,5 +8,8 @@ import io.realm.RealmObject
 open class User(
         open var userId: String = "",
         open var userName: String = "",
-        open var cognitoId: String = ""
+        open var cognitoId: String = "",
+        open var password: String = "",
+        open var createdAt: String = "",
+        open var updatedAt: String = ""
 ) : RealmObject()

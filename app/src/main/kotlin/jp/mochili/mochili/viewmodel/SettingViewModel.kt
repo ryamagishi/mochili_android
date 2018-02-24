@@ -5,6 +5,7 @@ import android.databinding.ObservableField
 import android.os.Handler
 import android.text.format.DateFormat
 import android.util.Log
+import com.amazonaws.mobileconnectors.apigateway.ApiClientException
 import com.amazonaws.mobileconnectors.apigateway.ApiClientFactory
 import io.realm.Realm
 import jp.mochili.mochili.contract.SettingViewContract
@@ -49,11 +50,18 @@ class SettingViewModel(val view: SettingViewContract) {
         updatedUserId = userId.get().trim()
         updatedUserName = userName.get().trim()
 
-        // 変化したかどうか（初回時は絶対に変化したとする）
-        val isChanged = isFirst or (lastUserId != updatedUserId) or (lastUserName != updatedUserName)
-        // 変化した場合は問題ないかcheck, 変化してない場合は何もせず前の画面に戻る
-        if (isChanged) {
+        // 変化したかどうか
+        val isChanged = (lastUserId != updatedUserId) or (lastUserName != updatedUserName)
+        // 変化した場合は問題ないかcheck, 変化してない場合は何もせず前の画面に戻る(初回時は絶対チェック)
+        if (isFirst) {
             if (checkFormat()) checkUniqueId(checkedFun)
+        } else if (isChanged) {
+            if (checkFormat()) {
+                confirmChangeDialog(
+                        { _, _ -> checkedFun() },
+                        { _, _ -> view.onSuperBack() }
+                )
+            }
         } else {
             view.onSuperBack()
         }
@@ -101,16 +109,19 @@ class SettingViewModel(val view: SettingViewContract) {
 
                 val result: Result
                 result =
-                        if (isFirst) { client.userPost(awsUser) }
-                        else { client.userPost(awsUser) }
+                        if (isFirst) {
+                            client.userPost(awsUser)
+                        } else {
+                            client.userPut(awsUser)
+                        }
                 Log.d("awsUserResult", result.status + "****" + result.detail)
                 // OKでなければエラーダイアログを表示し再度登録を求める
                 if (result.status == "OK") {
-                    handler.post{ saveChangeRealm(isFirst) }
+                    handler.post { saveChangeRealm(isFirst) }
                 } else {
-                    handler.post{ savingErrorDialog() }
+                    handler.post { savingErrorDialog() }
                 }
-            } catch(e: Exception) {
+            } catch(e: ApiClientException) {
                 e.stackTrace
             }
         }
@@ -181,7 +192,6 @@ class SettingViewModel(val view: SettingViewContract) {
         view.showDialog(title, message)
     }
 
-
     // saveError
     private fun savingErrorDialog() {
         val title = "エラー"
@@ -189,6 +199,16 @@ class SettingViewModel(val view: SettingViewContract) {
             エラーが発生しました。もう一度お試し下さい。
             """.trimIndent()
         view.showDialog(title, message)
+    }
+
+    private fun confirmChangeDialog(
+            positiveEvent: (dialog: DialogInterface, which: Int) -> Unit,
+            negativeEvent: (dialog: DialogInterface, which: Int) -> Unit) {
+        val title = "注意"
+        val message = """
+                    ユーザー名を${updatedUserName}に変更しますか？
+                    """.trimIndent()
+        view.showDialog(title, message, positiveEvent, negativeEvent)
     }
     //endregion
 }

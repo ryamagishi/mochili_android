@@ -10,4 +10,7 @@ interface SettingViewContract {
     fun showDialog(title: String, message: String)
     fun showDialog(title: String, message: String,
                    positiveEvent: (dialog: DialogInterface, which: Int) -> Unit)
+    fun showDialog(title: String, message: String,
+                   positiveEvent: (dialog: DialogInterface, which: Int) -> Unit,
+                   negativeEvent: (dialog: DialogInterface, which: Int) -> Unit)
 }

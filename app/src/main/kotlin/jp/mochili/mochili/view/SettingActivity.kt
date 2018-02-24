@@ -101,5 +101,12 @@ class SettingActivity : AppCompatActivity(), SettingViewContract {
                    positiveEvent: (dialog: DialogInterface, which: Int) -> Unit) {
         DialogUtils.showDialog(this, title, message, positiveEvent)
     }
+
+    // positive,negativeEventのあるdialogを表示
+    override fun showDialog(title: String, message: String,
+                            positiveEvent: (dialog: DialogInterface, which: Int) -> Unit,
+                            negativeEvent: (dialog: DialogInterface, which: Int) -> Unit) {
+        DialogUtils.showDialog(this, title, message, positiveEvent, negativeEvent)
+    }
     //endregion
 }

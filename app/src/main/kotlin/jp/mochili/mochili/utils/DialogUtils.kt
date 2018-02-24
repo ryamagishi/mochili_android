@@ -27,4 +27,17 @@ object DialogUtils {
                 .setNegativeButton("Cancel", null)
                 .show()
     }
+
+    // positive,negativeEventのあるdialogを表示
+    fun showDialog(context: Context, title: String, message: String,
+                   positiveEvent: (dialog: DialogInterface, which: Int) -> Unit,
+                   negativeEvent: (dialog: DialogInterface, which: Int) -> Unit) {
+        AlertDialog.Builder(context)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("YES", positiveEvent)
+                .setNeutralButton("キャンセル", null)
+                .setNegativeButton("No", negativeEvent)
+                .show()
+    }
 }

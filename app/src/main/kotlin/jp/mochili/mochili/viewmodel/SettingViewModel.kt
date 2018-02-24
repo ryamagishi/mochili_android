@@ -3,6 +3,7 @@ package jp.mochili.mochili.viewmodel
 import android.content.DialogInterface
 import android.databinding.ObservableField
 import android.os.Handler
+import android.text.format.DateFormat
 import android.util.Log
 import com.amazonaws.mobileconnectors.apigateway.ApiClientFactory
 import io.realm.Realm
@@ -10,9 +11,12 @@ import jp.mochili.mochili.contract.SettingViewContract
 import jp.mochili.mochili.model.AWS.AWSClient
 import jp.mochili.mochili.model.User
 import jp.mochili.mochili.model.apigateway.MochiliClient
+import jp.mochili.mochili.model.apigateway.model.Result
+import java.util.*
 import kotlin.concurrent.thread
 import jp.mochili.mochili.model.apigateway.model.User as AWSUser
 import kotlin.concurrent.thread as AWSUser
+
 
 /**
  * Created by ryotayamagishi on 2018/01/01.
@@ -81,7 +85,7 @@ class SettingViewModel(val view: SettingViewContract) {
     }
 
     // realm及びサーバーに変更を保存
-    fun saveChangeFirst() {
+    fun saveChangeAWS(isFirst: Boolean) {
         thread {
             try {
                 val credentialsProvider = AWSClient.getCredentialsProvider()
@@ -91,13 +95,18 @@ class SettingViewModel(val view: SettingViewContract) {
                 val awsUser = AWSUser()
                 awsUser.userId = updatedUserId
                 awsUser.userName = updatedUserName
-                awsUser.cognitoId = "test"
+                awsUser.cognitoId = credentialsProvider.identityId
+                // 暫定的にpasswordは全てp
                 awsUser.password = "p"
-                val result = client.userPost(awsUser)
-                Log.d("postUserResult", result.status + "****" + result.detail)
+
+                val result: Result
+                result =
+                        if (isFirst) { client.userPost(awsUser) }
+                        else { client.userPost(awsUser) }
+                Log.d("awsUserResult", result.status + "****" + result.detail)
                 // OKでなければエラーダイアログを表示し再度登録を求める
                 if (result.status == "OK") {
-                    handler.post{ saveChange(true) }
+                    handler.post{ saveChangeRealm(isFirst) }
                 } else {
                     handler.post{ savingErrorDialog() }
                 }
@@ -107,30 +116,35 @@ class SettingViewModel(val view: SettingViewContract) {
         }
     }
 
-    fun saveChange(isFirst: Boolean) {
-        Log.d("thread", "test")
-        view.onSuperBack()
+    fun saveChangeRealm(isFirst: Boolean) {
+        // 現在時刻を取得
+        val nowDataTime = DateFormat
+                .format("yyyy-MM-dd, E, kk:mm:ss", Calendar.getInstance())
+                .toString()
+
+        // realmに保存
         if (isFirst) {
-            //            val realm = Realm.getDefaultInstance()
-//            realm.beginTransaction()
-//            val user = User()
-//            user.userId = updatedUserId
-//            user.userName = updatedUserName
-//            user.cognitoId = "test"
-//            realm.copyToRealmOrUpdate(user)
-//            realm.commitTransaction()
-//            realm.close()
-//        } else {
-//            val realm = Realm.getDefaultInstance()
-//            realm.beginTransaction()
-//            val user = realm.where(User::class.java).findFirst()
-//            user?.userName = updatedUserName
-//            realm.commitTransaction()
-//            realm.close()
+            val realm = Realm.getDefaultInstance()
+            realm.beginTransaction()
+            val user = User()
+            user.userId = updatedUserId
+            user.userName = updatedUserName
+            user.createdAt = nowDataTime
+            user.updatedAt = nowDataTime
+            realm.copyToRealmOrUpdate(user)
+            realm.commitTransaction()
+            realm.close()
+        } else {
+            val realm = Realm.getDefaultInstance()
+            realm.beginTransaction()
+            val user = realm.where(User::class.java).findFirst()
+            user?.userName = updatedUserName
+            user?.updatedAt = nowDataTime
+            realm.commitTransaction()
+            realm.close()
         }
+        view.onSuperBack()
     }
-
-
 
     //region dialog
     fun firstDialog() {

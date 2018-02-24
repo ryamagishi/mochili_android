@@ -77,10 +77,10 @@ class SettingActivity : AppCompatActivity(), SettingViewContract {
             // checkChangeが問題なかった場合に以下のメソッドが実行
             if (isFirst) {
                 viewModel.confirmDialog { _, _ ->
-                    viewModel.saveChangeFirst()
+                    viewModel.saveChangeAWS(true)
                 }
             } else {
-                viewModel.saveChange(false)
+                viewModel.saveChangeAWS(false)
             }
         }
     }

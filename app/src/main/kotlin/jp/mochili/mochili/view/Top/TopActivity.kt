@@ -1,18 +1,16 @@
 package jp.mochili.mochili.view.Top
 
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import jp.mochili.mochili.R
 import android.support.v4.app.Fragment
+import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import io.realm.Realm
-import jp.mochili.mochili.model.AWS.AWSClient
+import jp.mochili.mochili.R
 import jp.mochili.mochili.model.User
 import jp.mochili.mochili.view.SettingActivity
 import kotlinx.android.synthetic.main.activity_top.*
-import kotlin.concurrent.thread
 
 class TopActivity : AppCompatActivity() {
 
@@ -102,13 +100,6 @@ class TopActivity : AppCompatActivity() {
             intent.putExtra("isFirst", true)
             startActivity(intent)
             realm.close()
-        } else {
-            thread {
-                realm.beginTransaction()
-                user.cognitoId = AWSClient.getCredentialsProvider().identityId
-                realm.commitTransaction()
-                realm.close()
-            }
         }
     }
     //endregion

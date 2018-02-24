@@ -81,26 +81,37 @@ class SettingViewModel(val view: SettingViewContract) {
     }
 
     // realm及びサーバーに変更を保存
-    fun saveChange(isFirst: Boolean) {
-        if (isFirst) {
-            thread {
-                try {
-                    val credentialsProvider = AWSClient.getCredentialsProvider()
-                    val client = ApiClientFactory()
-                            .credentialsProvider(credentialsProvider)
-                            .build<MochiliClient>(MochiliClient::class.java)
-                    val awsUser = AWSUser()
-                    awsUser.userId = updatedUserId
-                    awsUser.userName = updatedUserName
-                    awsUser.cognitoId = "test"
-                    awsUser.password = "p"
-                    val result = client.userPost(awsUser)
-                    Log.d("awsResult", result.status + "****" + result.detail)
-                } catch(e: Exception) {
-                    e.stackTrace
+    fun saveChangeFirst() {
+        thread {
+            try {
+                val credentialsProvider = AWSClient.getCredentialsProvider()
+                val client = ApiClientFactory()
+                        .credentialsProvider(credentialsProvider)
+                        .build<MochiliClient>(MochiliClient::class.java)
+                val awsUser = AWSUser()
+                awsUser.userId = updatedUserId
+                awsUser.userName = updatedUserName
+                awsUser.cognitoId = "test"
+                awsUser.password = "p"
+                val result = client.userPost(awsUser)
+                Log.d("postUserResult", result.status + "****" + result.detail)
+                // OKでなければエラーダイアログを表示し再度登録を求める
+                if (result.status == "OK") {
+                    handler.post{ saveChange(true) }
+                } else {
+                    handler.post{ savingErrorDialog() }
                 }
+            } catch(e: Exception) {
+                e.stackTrace
             }
-//            val realm = Realm.getDefaultInstance()
+        }
+    }
+
+    fun saveChange(isFirst: Boolean) {
+        Log.d("thread", "test")
+        view.onSuperBack()
+        if (isFirst) {
+            //            val realm = Realm.getDefaultInstance()
 //            realm.beginTransaction()
 //            val user = User()
 //            user.userId = updatedUserId
@@ -109,7 +120,7 @@ class SettingViewModel(val view: SettingViewContract) {
 //            realm.copyToRealmOrUpdate(user)
 //            realm.commitTransaction()
 //            realm.close()
-        } else {
+//        } else {
 //            val realm = Realm.getDefaultInstance()
 //            realm.beginTransaction()
 //            val user = realm.where(User::class.java).findFirst()
@@ -118,6 +129,8 @@ class SettingViewModel(val view: SettingViewContract) {
 //            realm.close()
         }
     }
+
+
 
     //region dialog
     fun firstDialog() {
@@ -150,6 +163,16 @@ class SettingViewModel(val view: SettingViewContract) {
         val title = "注意"
         val message = """
             ${updatedUserId}は使われています。他のユーザーIDをご入力下さい。
+            """.trimIndent()
+        view.showDialog(title, message)
+    }
+
+
+    // saveError
+    private fun savingErrorDialog() {
+        val title = "エラー"
+        val message = """
+            エラーが発生しました。もう一度お試し下さい。
             """.trimIndent()
         view.showDialog(title, message)
     }

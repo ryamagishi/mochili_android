@@ -77,12 +77,10 @@ class SettingActivity : AppCompatActivity(), SettingViewContract {
             // checkChangeが問題なかった場合に以下のメソッドが実行
             if (isFirst) {
                 viewModel.confirmDialog { _, _ ->
-                    viewModel.saveChange(isFirst)
-                    super.onBackPressed()
+                    viewModel.saveChangeFirst()
                 }
             } else {
-                viewModel.saveChange(isFirst)
-                super.onBackPressed()
+                viewModel.saveChange(false)
             }
         }
     }

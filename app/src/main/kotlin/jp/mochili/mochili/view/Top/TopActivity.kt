@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.activity_top.*
 class TopActivity : AppCompatActivity() {
 
     private val fragments: MutableList<Fragment> = mutableListOf()
-    lateinit private var titles: Array<String>
+    private lateinit var titles: Array<String>
 
     // viewpagerを管理するenum
     enum class FragmentEnum(val id: Int, val title: String, val image: Int, val color: Int) {

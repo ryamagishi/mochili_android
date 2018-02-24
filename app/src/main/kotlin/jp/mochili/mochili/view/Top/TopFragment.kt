@@ -1,13 +1,13 @@
 package jp.mochili.mochili.view.Top
 
+import android.os.Bundle
+import android.os.Handler
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.os.Bundle
-import android.os.Handler
-import android.view.ViewGroup
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import com.amazonaws.mobileconnectors.apigateway.ApiClientFactory
 import jp.mochili.mochili.R
 import jp.mochili.mochili.model.AWS.AWSClient
@@ -21,9 +21,9 @@ import kotlin.concurrent.thread
  */
 class TopFragment : Fragment() {
 
-    val handler = Handler()
-    lateinit private var fragmentEnum: TopActivity.FragmentEnum
-    lateinit private var recyclerView: RecyclerView
+    private val handler = Handler()
+    private lateinit var fragmentEnum: TopActivity.FragmentEnum
+    private lateinit var recyclerView: RecyclerView
     private var dataList: MutableList<String> = mutableListOf()
 
     companion object {

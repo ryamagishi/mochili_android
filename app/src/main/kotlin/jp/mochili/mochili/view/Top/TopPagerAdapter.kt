@@ -9,8 +9,8 @@ import android.support.v4.app.FragmentPagerAdapter
  */
 class TopPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
-    lateinit private var fragments: ArrayList<Fragment>
-    lateinit private var titles: Array<String>
+    private lateinit var fragments: ArrayList<Fragment>
+    private lateinit var titles: Array<String>
 
     constructor(fragmentManager: FragmentManager, fragments: ArrayList<Fragment>, titles: Array<String>)
             : this(fragmentManager) {

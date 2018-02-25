@@ -15,7 +15,7 @@ import jp.mochili.mochili.view.SettingActivity
 import jp.mochili.mochili.viewmodel.TopViewModel
 import kotlinx.android.synthetic.main.activity_top.*
 
-class TopActivity : AppCompatActivity() {
+class TopActivity : AppCompatActivity(), TopFragment.TopFragmentListener {
 
     private lateinit var viewModel: TopViewModel
     private val fragments: MutableList<Fragment> = mutableListOf()
@@ -74,6 +74,12 @@ class TopActivity : AppCompatActivity() {
     private fun initViewPager() {
         viewpager_top.offscreenPageLimit = FragmentEnum.values().size
         viewpager_top.adapter = TopPagerAdapter(supportFragmentManager, fragments as ArrayList<Fragment>, titles)
+    }
+    //endregion
+
+    //region FragmentListener関連
+    override fun getFriends(): MutableList<String> {
+        return viewModel.getFriends()
     }
     //endregion
 

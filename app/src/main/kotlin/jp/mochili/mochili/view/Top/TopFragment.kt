@@ -1,5 +1,6 @@
 package jp.mochili.mochili.view.Top
 
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.Fragment
@@ -24,6 +25,7 @@ class TopFragment : Fragment() {
     private val handler = Handler()
     private lateinit var fragmentEnum: TopActivity.FragmentEnum
     private lateinit var recyclerView: RecyclerView
+    private lateinit var listener: TopFragmentListener
     private var dataList: MutableList<String> = mutableListOf()
 
     companion object {
@@ -76,13 +78,24 @@ class TopFragment : Fragment() {
                 }
             }
             FragmentEnum.FRIENDS -> {
-                var i = 1
-                while (i < 20) {
-                    (dataList as ArrayList<String>).add(fragmentEnum.title)
-                    i++
-                }
+                val dataList = listener.getFriends()
                 recyclerView.adapter = FriendRecyclerAdapter(recyclerView.context, dataList)
             }
         }
     }
+
+    //region fragment,activity連携
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is TopFragmentListener) {
+            listener = context
+        } else {
+            throw RuntimeException(context.toString() + " must implement TopFragmentListener")
+        }
+    }
+
+    interface TopFragmentListener {
+        fun getFriends(): MutableList<String>
+    }
+    //endregion
 }

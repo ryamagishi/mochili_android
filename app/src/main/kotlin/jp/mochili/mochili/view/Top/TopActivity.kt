@@ -1,6 +1,7 @@
 package jp.mochili.mochili.view.Top
 
 import android.content.Intent
+import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
@@ -8,12 +9,15 @@ import android.view.Menu
 import android.view.MenuItem
 import io.realm.Realm
 import jp.mochili.mochili.R
+import jp.mochili.mochili.databinding.ActivityTopBinding
 import jp.mochili.mochili.model.User
 import jp.mochili.mochili.view.SettingActivity
+import jp.mochili.mochili.viewmodel.TopViewModel
 import kotlinx.android.synthetic.main.activity_top.*
 
 class TopActivity : AppCompatActivity() {
 
+    private lateinit var viewModel: TopViewModel
     private val fragments: MutableList<Fragment> = mutableListOf()
     private lateinit var titles: Array<String>
 
@@ -25,7 +29,10 @@ class TopActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_top)
+        val binding = DataBindingUtil.setContentView<ActivityTopBinding>(this,
+                R.layout.activity_top)
+        viewModel = TopViewModel()
+        binding.viewmodel = viewModel
 
         // UserId登録済かチェック
         checkRegister()

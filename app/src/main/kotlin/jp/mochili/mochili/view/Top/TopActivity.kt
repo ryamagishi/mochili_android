@@ -78,8 +78,8 @@ class TopActivity : AppCompatActivity(), TopFragment.TopFragmentListener {
     //endregion
 
     //region FragmentListener関連
-    override fun getFriends(): MutableList<String> {
-        return viewModel.getFriends()
+    override fun getFriends(noticeAdapter: (friendNames: MutableList<String>) -> Unit) {
+        viewModel.getFriends(noticeAdapter)
     }
     //endregion
 

@@ -78,8 +78,10 @@ class TopFragment : Fragment() {
                 }
             }
             FragmentEnum.FRIENDS -> {
-                val dataList = listener.getFriends()
-                recyclerView.adapter = FriendRecyclerAdapter(recyclerView.context, dataList)
+                listener.getFriends {
+                    friendNames ->
+                    recyclerView.adapter = FriendRecyclerAdapter(recyclerView.context, friendNames)
+                }
             }
         }
     }
@@ -95,7 +97,7 @@ class TopFragment : Fragment() {
     }
 
     interface TopFragmentListener {
-        fun getFriends(): MutableList<String>
+        fun getFriends(noticeAdapter: (friendNames: MutableList<String>) -> Unit)
     }
     //endregion
 }

@@ -66,7 +66,7 @@ class TopFragment : Fragment() {
                         val client = ApiClientFactory()
                                 .credentialsProvider(credentialsProvider)
                                 .build<MochiliClient>(MochiliClient::class.java)
-                        val mochilis = client.mymochilisGet("Karl")
+                        val mochilis = client.mymochilisGet("android")
                         mochilis.mapTo(dataList) { it.mochiliName }
 
                         handler.post {

@@ -84,8 +84,8 @@ class SettingViewModel(val view: SettingViewContract) {
                 val client = ApiClientFactory()
                         .credentialsProvider(credentialsProvider)
                         .build<MochiliClient>(MochiliClient::class.java)
-                val user = client.userGet(updatedUserId)
-                if (user.userId == null) handler.post(checkedFun) else handler.post{ uniqueIdDialog() }
+                val isUser = client.userGet(updatedUserId)
+                if (!isUser) handler.post(checkedFun) else handler.post{ uniqueIdDialog() }
             } catch(e: Exception) {
                 e.stackTrace
             }
@@ -103,7 +103,6 @@ class SettingViewModel(val view: SettingViewContract) {
                 val awsUser = AWSUser()
                 awsUser.userId = updatedUserId
                 awsUser.userName = updatedUserName
-                awsUser.cognitoId = credentialsProvider.identityId
                 // 暫定的にpasswordは全てp
                 awsUser.password = "p"
 

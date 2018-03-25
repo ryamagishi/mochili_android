@@ -74,7 +74,7 @@ class SettingViewModel(private val settingView: SettingViewContract) {
         }
     }
 
-    // userId,userNameが正しい書式であるかをチェック
+    // friendId,userNameが正しい書式であるかをチェック
     private fun checkFormat(): Boolean {
         if (updatedUserId.isEmpty() or updatedUserName.isEmpty()) {
             formatDialog()
@@ -113,8 +113,7 @@ class SettingViewModel(private val settingView: SettingViewContract) {
                 // 暫定的にpasswordは全てp
                 awsUser.password = "p"
 
-                val result: Result
-                result =
+                val result: Result =
                         if (isFirst) {
                             client.userPost(awsUser)
                         } else {

@@ -119,8 +119,8 @@ class TopActivity : AppCompatActivity(), TopViewContract, TopFragment.TopFragmen
             val intent = Intent(this, SettingActivity::class.java)
             intent.putExtra("isFirst", true)
             startActivity(intent)
-            realm.close()
         }
+        realm.close()
     }
     //endregion
 

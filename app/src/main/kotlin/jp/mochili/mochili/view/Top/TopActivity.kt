@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.activity_top.*
 class TopActivity : AppCompatActivity(), TopFragment.TopFragmentListener {
 
     private lateinit var viewModel: TopViewModel
-    private val fragments: MutableList<Fragment> = mutableListOf()
+    private val fragments: MutableList<TopFragment> = mutableListOf()
     private lateinit var titles: Array<String>
 
     // viewpagerを管理するenum
@@ -39,6 +39,11 @@ class TopActivity : AppCompatActivity(), TopFragment.TopFragmentListener {
 
         // fragmentをセット
         setView()
+    }
+
+    override fun onResume() {
+        fragments.forEach { it.initData() }
+        super.onResume()
     }
 
     //region Fragment関連

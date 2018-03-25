@@ -26,7 +26,7 @@ class TopFragment : Fragment() {
     private lateinit var fragmentEnum: TopActivity.FragmentEnum
     private lateinit var recyclerView: RecyclerView
     private lateinit var listener: TopFragmentListener
-    private var dataList: MutableList<String> = mutableListOf()
+    private var fragmentCreated = false
 
     companion object {
         const val FRAGMENT_ENUM = "fragment_enum"
@@ -51,13 +51,16 @@ class TopFragment : Fragment() {
 
         recyclerView = view.findViewById(R.id.recyclerview_top) as RecyclerView
         recyclerView.layoutManager = LinearLayoutManager(recyclerView.context)
+        fragmentCreated = true
         initData()
 
         return view
     }
 
     // dataListにデータを格納
-    private fun initData() {
+    fun initData() {
+        // fragmentが作られている状態のみデータをセット
+        if (!fragmentCreated) return
         when (fragmentEnum) {
             FragmentEnum.MOCHILIS -> {
                 thread {
@@ -67,6 +70,7 @@ class TopFragment : Fragment() {
                                 .credentialsProvider(credentialsProvider)
                                 .build<MochiliClient>(MochiliClient::class.java)
                         val mochilis = client.mymochilisGet("android")
+                        val dataList: MutableList<String> = mutableListOf()
                         mochilis.mapTo(dataList) { it.mochiliName }
 
                         handler.post {

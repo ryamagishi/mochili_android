@@ -84,8 +84,8 @@ class SettingViewModel(val view: SettingViewContract) {
                 val client = ApiClientFactory()
                         .credentialsProvider(credentialsProvider)
                         .build<MochiliClient>(MochiliClient::class.java)
-                val isUser = client.userGet(updatedUserId)
-                if (!isUser) handler.post(checkedFun) else handler.post{ uniqueIdDialog() }
+                val user = client.userGet(updatedUserId)
+                if (user.userId == null) handler.post(checkedFun) else handler.post{ uniqueIdDialog() }
             } catch(e: Exception) {
                 e.stackTrace
             }

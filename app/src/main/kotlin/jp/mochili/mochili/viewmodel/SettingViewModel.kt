@@ -5,6 +5,7 @@ import android.databinding.ObservableField
 import android.os.Handler
 import android.text.format.DateFormat
 import android.util.Log
+import android.view.View
 import com.amazonaws.mobileconnectors.apigateway.ApiClientException
 import com.amazonaws.mobileconnectors.apigateway.ApiClientFactory
 import io.realm.Realm
@@ -22,7 +23,7 @@ import kotlin.concurrent.thread as AWSUser
 /**
  * Created by ryotayamagishi on 2018/01/01.
  */
-class SettingViewModel(val view: SettingViewContract) {
+class SettingViewModel(private val settingView: SettingViewContract) {
 
     // databinding
     val userId = ObservableField<String>()
@@ -45,6 +46,12 @@ class SettingViewModel(val view: SettingViewContract) {
         userName.set(lastUserName)
     }
 
+    // databinding
+    fun onClickSave(view: View) {
+        // ID,Nameの変化をcheckして問題なければsaveして戻る
+        settingView.checkChange()
+    }
+
     // 変更したかどうか、変更があった場合は問題ないかどうかをチェックしてdialogを表示
     fun checkChange(isFirst: Boolean, checkedFun: () -> Unit) {
         updatedUserId = userId.get().trim()
@@ -59,11 +66,11 @@ class SettingViewModel(val view: SettingViewContract) {
             if (checkFormat()) {
                 confirmChangeDialog(
                         { _, _ -> checkedFun() },
-                        { _, _ -> view.onSuperBack() }
+                        { _, _ -> settingView.onSuperBack() }
                 )
             }
         } else {
-            view.onSuperBack()
+            settingView.onSuperBack()
         }
     }
 
@@ -153,7 +160,7 @@ class SettingViewModel(val view: SettingViewContract) {
             realm.commitTransaction()
             realm.close()
         }
-        view.onSuperBack()
+        settingView.onSuperBack()
     }
 
     //region dialog
@@ -163,7 +170,7 @@ class SettingViewModel(val view: SettingViewContract) {
                 ユーザーIDとユーザー名を登録しましょう！
                 （ユーザーIDは変更できないので注意してください。）
             """.trimIndent()
-        view.showDialog(title, message)
+        settingView.showDialog(title, message)
     }
 
     private fun formatDialog() {
@@ -171,7 +178,7 @@ class SettingViewModel(val view: SettingViewContract) {
         val message = """
             ユーザーID,ユーザー名は1〜12文字にしてください。
             """.trimIndent()
-        view.showDialog(title, message)
+        settingView.showDialog(title, message)
     }
 
     fun confirmDialog(positiveEvent: (dialog: DialogInterface, which: Int) -> Unit) {
@@ -180,7 +187,7 @@ class SettingViewModel(val view: SettingViewContract) {
                     ユーザーIDは変更できません。
                     ${updatedUserId}で大丈夫ですか？
                     """.trimIndent()
-        view.showDialog(title, message, positiveEvent)
+        settingView.showDialog(title, message, positiveEvent)
     }
 
     private fun uniqueIdDialog() {
@@ -188,7 +195,7 @@ class SettingViewModel(val view: SettingViewContract) {
         val message = """
             ${updatedUserId}は使われています。他のユーザーIDをご入力下さい。
             """.trimIndent()
-        view.showDialog(title, message)
+        settingView.showDialog(title, message)
     }
 
     // saveError
@@ -197,7 +204,7 @@ class SettingViewModel(val view: SettingViewContract) {
         val message = """
             エラーが発生しました。もう一度お試し下さい。
             """.trimIndent()
-        view.showDialog(title, message)
+        settingView.showDialog(title, message)
     }
 
     private fun confirmChangeDialog(
@@ -207,7 +214,7 @@ class SettingViewModel(val view: SettingViewContract) {
         val message = """
                     ユーザー名を${updatedUserName}に変更しますか？
                     """.trimIndent()
-        view.showDialog(title, message, positiveEvent, negativeEvent)
+        settingView.showDialog(title, message, positiveEvent, negativeEvent)
     }
     //endregion
 }

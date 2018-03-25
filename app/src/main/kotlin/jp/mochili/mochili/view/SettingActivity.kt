@@ -72,7 +72,7 @@ class SettingActivity : AppCompatActivity(), SettingViewContract {
     }
 
     // ID,Nameの変化をcheckして問題なければsaveして戻る
-    private fun checkChange() {
+    override fun checkChange() {
         viewModel.checkChange(isFirst) {
             // checkChangeが問題なかった場合に以下のメソッドが実行
             if (isFirst) {

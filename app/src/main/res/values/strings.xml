@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">mochili</string>
     <string name="additem">addItem</string>
-    <string name="findFriendById">IDを入力して友だちを検索</string>
+    <string name="searchFriendById">IDを入力して友だちを検索</string>
 </resources>

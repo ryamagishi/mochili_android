@@ -1,8 +1,10 @@
 package jp.mochili.mochili.viewmodel
 
 import android.os.Handler
+import android.view.View
 import com.amazonaws.mobileconnectors.apigateway.ApiClientException
 import com.amazonaws.mobileconnectors.apigateway.ApiClientFactory
+import jp.mochili.mochili.contract.TopViewContract
 import jp.mochili.mochili.model.AWS.AWSClient
 import jp.mochili.mochili.model.apigateway.MochiliClient
 import kotlin.concurrent.thread
@@ -10,9 +12,14 @@ import kotlin.concurrent.thread
 /**
  * Created by ryotayamagishi on 2018/02/25.
  */
-class TopViewModel {
+class TopViewModel(private val topView: TopViewContract) {
 
     private val handler: Handler = Handler()
+
+    // addボタン押下時メソッド
+    fun onClickAdd(view: View) {
+        topView.startAddItem()
+    }
 
     // Friends呼び出しメソッド
     fun getFriends(noticeAdapter: (friendNames: MutableList<String>) -> Unit) {

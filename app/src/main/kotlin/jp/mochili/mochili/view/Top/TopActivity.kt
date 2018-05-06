@@ -13,6 +13,7 @@ import jp.mochili.mochili.contract.TopViewContract
 import jp.mochili.mochili.databinding.ActivityTopBinding
 import jp.mochili.mochili.model.User
 import jp.mochili.mochili.view.AddFriendActivity
+import jp.mochili.mochili.view.CreateMochiliActivity
 import jp.mochili.mochili.view.SettingActivity
 import jp.mochili.mochili.viewmodel.TopViewModel
 import kotlinx.android.synthetic.main.activity_top.*
@@ -128,8 +129,7 @@ class TopActivity : AppCompatActivity(), TopViewContract, TopFragment.TopFragmen
     override fun startAddItem() {
         val intent: Intent = when (viewpager_top.currentItem) {
             FragmentEnum.MOCHILIS.index -> {
-                // mochilis追加画面が出来次第ちゃんと実装予定
-                Intent(this, AddFriendActivity::class.java)
+                Intent(this, CreateMochiliActivity::class.java)
             }
             FragmentEnum.FRIENDS.index -> {
                 Intent(this, AddFriendActivity::class.java)

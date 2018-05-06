@@ -20,7 +20,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".view.SettingActivity" />
-        <activity android:name=".view.AddFriendActivity"></activity>
+        <activity android:name=".view.AddFriendActivity" />
+        <activity android:name=".view.CreateMochiliActivity"></activity>
     </application>
 
 </manifest>

@@ -4,6 +4,7 @@ import android.content.DialogInterface
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.MenuItem
 import jp.mochili.mochili.R
 import jp.mochili.mochili.contract.AddFriendViewContract
 import jp.mochili.mochili.databinding.ActivityAddFriendBinding
@@ -29,6 +30,14 @@ class AddFriendActivity : AppCompatActivity(), AddFriendViewContract {
         setSupportActionBar(my_toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "友だち追加"
+    }
+
+    // 左上のbackと通常backの挙動を合わせる
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> onBackPressed()
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     //region SettingViewContract

@@ -29,29 +29,38 @@ class AddFriendViewModel(private val addFriendView: AddFriendViewContract) {
         // realmよりuserIdを取得しとく、nullだったらactivityをfinish
         val realm = Realm.getDefaultInstance()
         val user = realm.where(User::class.java).findFirst()
-        if (user?.userId == null) { addFriendView.activityFinish() } else userId = user.userId
+        if (user?.userId == null) {
+            addFriendView.activityFinish()
+        } else userId = user.userId
         realm.close()
     }
 
     // databinding Userを検索してダイアログを表示
     fun onClickSearch(view: View) {
+        // 自分のidで検索している時はダイアログをだし何もしない
+        if (userId == friendId.get().trim()) {
+            myUserIdDialog()
+            return
+        }
         thread {
             try {
                 val credentialsProvider = AWSClient.getCredentialsProvider()
                 val client = ApiClientFactory()
                         .credentialsProvider(credentialsProvider)
                         .build<MochiliClient>(MochiliClient::class.java)
-                val user = client.userGet(friendId.get().trim())
-                if (user.userId == null) handler.post{ noneUserDialog() }
-                else handler.post{ confirmDialog(user.userName) { _, _ -> addFriend()} }
-            } catch(e: Exception) {
+                val friend = client.userGet(friendId.get().trim())
+                if (friend.userId == null) handler.post { noneUserDialog() }
+                else handler.post {
+                    confirmDialog(friend.userName) { _, _ -> addFriend(friend.userName) }
+                }
+            } catch (e: Exception) {
                 e.stackTrace
             }
         }
     }
 
     // friend追加
-    private fun addFriend() {
+    private fun addFriend(friendName: String) {
         thread {
             try {
                 val credentialsProvider = AWSClient.getCredentialsProvider()
@@ -63,7 +72,14 @@ class AddFriendViewModel(private val addFriendView: AddFriendViewContract) {
                 friend.friendId = friendId.get().trim()
                 val result: Result = client.friendPost(friend)
                 Log.d("FriendResult", result.status + "****" + result.detail)
-            } catch(e: Exception) {
+                if (result.status == "OK") {
+                    handler.post {
+                        saveSuccessDialog(friendName) { _, _ -> addFriendView.activityFinish() }
+                    }
+                } else {
+                    handler.post { saveErrorDialog(friendName) }
+                }
+            } catch (e: Exception) {
                 e.stackTrace
             }
         }
@@ -86,6 +102,31 @@ class AddFriendViewModel(private val addFriendView: AddFriendViewContract) {
                     「${userName}」さんを友達に追加しますか？
                     """.trimIndent()
         addFriendView.showDialog(title, message, positiveEvent)
+    }
+
+    private fun saveSuccessDialog(userName: String,
+                                  positiveEvent: (dialog: DialogInterface, which: Int) -> Unit) {
+        val title = "「${userName}」さんを友達に追加しました。"
+        val message = """
+                トップ画面に戻りますか？
+                """.trimIndent()
+        addFriendView.showDialog(title, message, positiveEvent)
+    }
+
+    private fun saveErrorDialog(userName: String) {
+        val title = "エラーが発生しました。"
+        val message = """
+                    「${userName}」さんは既に友達に追加されています。
+                    """.trimIndent()
+        addFriendView.showDialog(title, message)
+    }
+
+    private fun myUserIdDialog() {
+        val title = "エラーが発生しました。"
+        val message = """
+                    「${friendId.get().trim()}」は自分のユーザーIDです。
+                    """.trimIndent()
+        addFriendView.showDialog(title, message)
     }
     //endregion
 }

@@ -13,6 +13,7 @@ import com.amazonaws.mobileconnectors.apigateway.ApiClientFactory
 import jp.mochili.mochili.R
 import jp.mochili.mochili.model.AWS.AWSClient
 import jp.mochili.mochili.model.apigateway.MochiliClient
+import jp.mochili.mochili.model.apigateway.model.Friends
 import jp.mochili.mochili.view.Top.TopActivity.FragmentEnum
 import kotlin.concurrent.thread
 
@@ -82,8 +83,8 @@ class TopFragment : Fragment() {
                 }
             }
             FragmentEnum.FRIENDS -> {
-                listener.getFriends { friendNames ->
-                    recyclerView.adapter = FriendRecyclerAdapter(recyclerView.context, friendNames)
+                listener.getFriends { friends ->
+                    recyclerView.adapter = FriendRecyclerAdapter(recyclerView.context, friends)
                 }
             }
         }
@@ -100,7 +101,7 @@ class TopFragment : Fragment() {
     }
 
     interface TopFragmentListener {
-        fun getFriends(noticeAdapter: (friendNames: MutableList<String>) -> Unit)
+        fun getFriends(noticeAdapter: (friends: Friends) -> Unit)
     }
     //endregion
 }

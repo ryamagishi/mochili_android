@@ -22,7 +22,8 @@
         <activity android:name=".view.SettingActivity" />
         <activity android:name=".view.AddFriendActivity" />
         <activity android:name=".view.CreateMochiliActivity" />
-        <activity android:name=".view.MochiliActivity"></activity>
+        <activity android:name=".view.MochiliActivity" />
+        <activity android:name=".view.InviteFriendActivity"></activity>
     </application>
 
 </manifest>

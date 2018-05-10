@@ -9,6 +9,7 @@ import jp.mochili.mochili.contract.TopViewContract
 import jp.mochili.mochili.model.AWS.AWSClient
 import jp.mochili.mochili.model.User
 import jp.mochili.mochili.model.apigateway.MochiliClient
+import jp.mochili.mochili.model.apigateway.model.Friends
 import kotlin.concurrent.thread
 
 /**
@@ -24,7 +25,7 @@ class TopViewModel(private val topView: TopViewContract) {
     }
 
     // Friends呼び出しメソッド
-    fun getFriends(noticeAdapter: (friendNames: MutableList<String>) -> Unit) {
+    fun getFriends(noticeAdapter: (friends: Friends) -> Unit) {
         thread {
             val realm = Realm.getDefaultInstance()
             val user = realm.where(User::class.java).findFirst()
@@ -34,11 +35,8 @@ class TopViewModel(private val topView: TopViewContract) {
                 val client = ApiClientFactory()
                         .credentialsProvider(credentialsProvider)
                         .build<MochiliClient>(MochiliClient::class.java)
-                val friends = client.myfriendsGet(user?.userId)
-                val friendNames: MutableList<String> = mutableListOf()
-                friends.mapTo(friendNames) { it.friendName }
-                handler.post {
-                    noticeAdapter(friendNames)
+                client.myfriendsGet(user?.userId)?.let {
+                    handler.post { noticeAdapter(it) }
                 }
             } catch(e: ApiClientException) {
                 e.stackTrace

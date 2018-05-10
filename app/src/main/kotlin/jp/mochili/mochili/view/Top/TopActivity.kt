@@ -12,6 +12,7 @@ import jp.mochili.mochili.R
 import jp.mochili.mochili.contract.TopViewContract
 import jp.mochili.mochili.databinding.ActivityTopBinding
 import jp.mochili.mochili.model.User
+import jp.mochili.mochili.model.apigateway.model.Friends
 import jp.mochili.mochili.view.AddFriendActivity
 import jp.mochili.mochili.view.CreateMochiliActivity
 import jp.mochili.mochili.view.SettingActivity
@@ -86,7 +87,7 @@ class TopActivity : AppCompatActivity(), TopViewContract, TopFragment.TopFragmen
     //endregion
 
     //region FragmentListener関連
-    override fun getFriends(noticeAdapter: (friendNames: MutableList<String>) -> Unit) {
+    override fun getFriends(noticeAdapter: (friends: Friends) -> Unit) {
         viewModel.getFriends(noticeAdapter)
     }
     //endregion

@@ -5,4 +5,5 @@ package jp.mochili.mochili.contract
  */
 interface CreateMochiliViewContract {
     fun activityFinish()
+    fun startInviteFriendActivity()
 }

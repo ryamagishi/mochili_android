@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.activity_create_mochili.*
 class CreateMochiliActivity : AppCompatActivity(), CreateMochiliViewContract {
 
     private lateinit var viewModel: CreateMochiliViewModel
+    private val INVITE_FRIEND_REQUEST_CODE = 100
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +40,17 @@ class CreateMochiliActivity : AppCompatActivity(), CreateMochiliViewContract {
                 MochiliMemberRecyclerAdapter(member_recyclerView.context, viewModel.mochiliMembers)
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when (requestCode) {
+            INVITE_FRIEND_REQUEST_CODE ->
+                if (requestCode == RESULT_OK) {
+                    data?.getStringExtra("UserId")?.let { viewModel.addMochiliMember(it) }
+                }
+            else -> super.onActivityResult(requestCode, resultCode, data)
+        }
+
+    }
+
     //region menu関連
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // メニューのインフレート
@@ -60,7 +72,14 @@ class CreateMochiliActivity : AppCompatActivity(), CreateMochiliViewContract {
     }
     //endregion
 
+    //region viewcontract
     override fun activityFinish() {
         finish()
     }
+
+    override fun startInviteFriendActivity() {
+        val intent = Intent(this, InviteFriendActivity::class.java)
+        startActivityForResult(intent, INVITE_FRIEND_REQUEST_CODE)
+    }
+    //endregion
 }

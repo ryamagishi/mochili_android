@@ -48,7 +48,7 @@ class CreateMochiliViewModel(private val createMochiliView: CreateMochiliViewCon
     }
 
     // saveボタン押下時メソッド最後に遷移
-    fun onClickSave(startMochiliActivity:(String) -> Unit ) {
+    fun onClickSave(startMochiliActivity: (String) -> Unit ) {
         //　保存してmochiliIdを取得
         val mochiliId = "test"
 
@@ -56,8 +56,12 @@ class CreateMochiliViewModel(private val createMochiliView: CreateMochiliViewCon
         startMochiliActivity(mochiliId)
     }
 
-    // mochiliMmeberを追加
-    fun addMochiliMember(userId: String) {
-
+    // mochiliMemberを追加
+    fun addMochiliMember(friendId: String, friendName: String) {
+        val member = FriendsItem()
+        member.friendId = friendId
+        member.friendName = friendName
+        mochiliMembers.add(member)
+        memberNumber = mochiliMembers.size
     }
 }

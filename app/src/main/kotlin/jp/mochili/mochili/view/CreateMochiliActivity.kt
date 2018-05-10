@@ -43,8 +43,10 @@ class CreateMochiliActivity : AppCompatActivity(), CreateMochiliViewContract {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             INVITE_FRIEND_REQUEST_CODE ->
-                if (requestCode == RESULT_OK) {
-                    data?.getStringExtra("UserId")?.let { viewModel.addMochiliMember(it) }
+                if (resultCode == RESULT_OK) {
+                    data?.getStringArrayListExtra("FriendId,FriendName")?.let {
+                        viewModel.addMochiliMember(it[0], it[1])
+                    }
                 }
             else -> super.onActivityResult(requestCode, resultCode, data)
         }

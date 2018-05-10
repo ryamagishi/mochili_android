@@ -1,19 +1,18 @@
-package jp.mochili.mochili.view.Top
+package jp.mochili.mochili.view
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
-import android.widget.TextView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import jp.mochili.mochili.R
 
-
 /**
- * Created by ryotayamagishi on 2017/11/28.
+ * Created by ryotayamagishi on 2018/05/11.
  */
-class FriendRecyclerAdapter(private val context: Context, private val dataList: List<String>)
-    : RecyclerView.Adapter<FriendRecyclerAdapter.MyViewHolder>() {
+class MochiliMemberRecyclerAdapter(private val context: Context, private val dataList: List<String>)
+    : RecyclerView.Adapter<MochiliMemberRecyclerAdapter.MyViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         return MyViewHolder(LayoutInflater

@@ -22,14 +22,12 @@
         <ImageButton
             android:id="@+id/add_button"
             android:layout_width="70dp"
-            android:layout_height="58dp"
+            android:layout_height="60dp"
             android:background="@null"
             android:contentDescription="@string/additem"
             android:onClick="@{viewmodel::onClickAdd}"
             app:layout_anchor="@+id/viewpager_top"
             app:layout_anchorGravity="right|bottom"
-            app:srcCompat="@android:drawable/ic_input_add"
-            tools:layout_editor_absoluteX="314dp"
-            tools:layout_editor_absoluteY="509dp" />
+            app:srcCompat="@android:drawable/ic_input_add" />
     </cn.hugeterry.coordinatortablayout.CoordinatorTabLayout>
 </layout>

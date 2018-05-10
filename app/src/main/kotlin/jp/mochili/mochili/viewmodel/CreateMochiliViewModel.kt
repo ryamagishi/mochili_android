@@ -1,12 +1,20 @@
 package jp.mochili.mochili.viewmodel
 
 import android.databinding.ObservableField
+import android.os.Handler
+import android.util.Log
 import android.view.View
+import com.amazonaws.mobileconnectors.apigateway.ApiClientFactory
 import io.realm.Realm
 import jp.mochili.mochili.contract.CreateMochiliViewContract
+import jp.mochili.mochili.model.AWS.AWSClient
 import jp.mochili.mochili.model.User
+import jp.mochili.mochili.model.apigateway.MochiliClient
 import jp.mochili.mochili.model.apigateway.model.Friends
 import jp.mochili.mochili.model.apigateway.model.FriendsItem
+import jp.mochili.mochili.model.apigateway.model.Mochili
+import jp.mochili.mochili.model.apigateway.model.Result
+import kotlin.concurrent.thread
 import jp.mochili.mochili.model.apigateway.model.User as Member
 
 /**
@@ -18,6 +26,7 @@ class CreateMochiliViewModel(private val createMochiliView: CreateMochiliViewCon
     val mochiliName = ObservableField<String>()
     val memberNumberText = ObservableField<String>()
 
+    private val handler: Handler = Handler()
     val mochiliMembers = Friends()
     private var memberNumber: Int = 1
         set(value) {
@@ -49,11 +58,34 @@ class CreateMochiliViewModel(private val createMochiliView: CreateMochiliViewCon
 
     // saveボタン押下時メソッド最後に遷移
     fun onClickSave(startMochiliActivity: (String) -> Unit ) {
-        //　保存してmochiliIdを取得
-        val mochiliId = "test"
+        thread {
+            try {
+                val credentialsProvider = AWSClient.getCredentialsProvider()
+                val client = ApiClientFactory()
+                        .credentialsProvider(credentialsProvider)
+                        .build<MochiliClient>(MochiliClient::class.java)
+                val mochili = Mochili()
+                mochili.createrId = mochiliMembers[0].friendId
+                mochili.mochiliName = mochiliName.get()
+                val mochiliMemberList = ArrayList<String>()
+                mochiliMembers.forEach { mochiliMemberList.add(it.friendId) }
+                mochili.mochiliMembers = mochiliMemberList
 
-        // 作成したmochiliのactivityへ移動
-        startMochiliActivity(mochiliId)
+                //　保存してmochiliIdを取得
+                val result: Result = client.mochiliPost(mochili)
+                Log.d("mochiliResult", result.status + "****" + result.detail)
+                if (result.status == "OK") {
+                    handler.post {
+                        val mochiliId = result.detail
+                        startMochiliActivity(mochiliId)
+                    }
+                } else {
+                    // TODO
+                }
+            } catch (e: Exception) {
+                e.stackTrace
+            }
+        }
     }
 
     // mochiliMemberを追加

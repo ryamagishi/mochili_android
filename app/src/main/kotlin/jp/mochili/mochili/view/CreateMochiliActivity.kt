@@ -1,5 +1,6 @@
 package jp.mochili.mochili.view
 
+import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -48,7 +49,12 @@ class CreateMochiliActivity : AppCompatActivity(), CreateMochiliViewContract {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> onBackPressed()
-            R.id.save_button -> onBackPressed()
+            R.id.save_button -> viewModel.onClickSave { mochiliId: String ->
+                val intent = Intent(this, MochiliActivity::class.java)
+                intent.putExtra("mochiliId", mochiliId)
+                startActivity(intent)
+                finish()
+            }
         }
         return super.onOptionsItemSelected(item)
     }

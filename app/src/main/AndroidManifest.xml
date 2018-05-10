@@ -21,7 +21,8 @@
         </activity>
         <activity android:name=".view.SettingActivity" />
         <activity android:name=".view.AddFriendActivity" />
-        <activity android:name=".view.CreateMochiliActivity"></activity>
+        <activity android:name=".view.CreateMochiliActivity" />
+        <activity android:name=".view.MochiliActivity"></activity>
     </application>
 
 </manifest>

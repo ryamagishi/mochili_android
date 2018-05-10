@@ -9,7 +9,7 @@ import jp.mochili.mochili.model.User
 /**
  * Created by ryotayamagishi on 2018/05/07.
  */
-class CreateMochiliViewModel(private val addFriendView: CreateMochiliViewContract) {
+class CreateMochiliViewModel(createMochiliView: CreateMochiliViewContract) {
 
     // databinding
     val mochiliName = ObservableField<String>()
@@ -27,7 +27,7 @@ class CreateMochiliViewModel(private val addFriendView: CreateMochiliViewContrac
         val realm = Realm.getDefaultInstance()
         val user = realm.where(User::class.java).findFirst()
         if (user?.userId == null) {
-            addFriendView.activityFinish()
+            createMochiliView.activityFinish()
         } else userName = user.userName
         realm.close()
 
@@ -38,6 +38,15 @@ class CreateMochiliViewModel(private val addFriendView: CreateMochiliViewContrac
 
     // addボタン押下時メソッド
     fun onClickAdd(view: View) {
-//        topView.startAddItem()
+        // TODO
+    }
+
+    // saveボタン押下時メソッド最後に遷移
+    fun onClickSave(goToMochiliActivity:(String) -> Unit ) {
+        //　保存してmochiliIdを取得
+        val mochiliId = "test"
+
+        // 作成したmochiliのactivityへ移動
+        goToMochiliActivity(mochiliId)
     }
 }

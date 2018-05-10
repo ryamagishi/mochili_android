@@ -76,14 +76,13 @@ class TopFragment : Fragment() {
                         handler.post {
                             recyclerView.adapter = MochiliRecyclerAdapter(recyclerView.context, dataList)
                         }
-                    } catch(e: Exception) {
+                    } catch (e: Exception) {
                         e.stackTrace
                     }
                 }
             }
             FragmentEnum.FRIENDS -> {
-                listener.getFriends {
-                    friendNames ->
+                listener.getFriends { friendNames ->
                     recyclerView.adapter = FriendRecyclerAdapter(recyclerView.context, friendNames)
                 }
             }

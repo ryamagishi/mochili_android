@@ -9,13 +9,10 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.amazonaws.mobileconnectors.apigateway.ApiClientFactory
 import jp.mochili.mochili.R
-import jp.mochili.mochili.model.AWS.AWSClient
-import jp.mochili.mochili.model.apigateway.MochiliClient
 import jp.mochili.mochili.model.apigateway.model.Friends
+import jp.mochili.mochili.model.apigateway.model.Mochilis
 import jp.mochili.mochili.view.Top.TopActivity.FragmentEnum
-import kotlin.concurrent.thread
 
 
 /**
@@ -64,22 +61,8 @@ class TopFragment : Fragment() {
         if (!fragmentCreated) return
         when (fragmentEnum) {
             FragmentEnum.MOCHILIS -> {
-                thread {
-                    try {
-                        val credentialsProvider = AWSClient.getCredentialsProvider()
-                        val client = ApiClientFactory()
-                                .credentialsProvider(credentialsProvider)
-                                .build<MochiliClient>(MochiliClient::class.java)
-                        val mochilis = client.mymochilisGet("android")
-                        val dataList: MutableList<String> = mutableListOf()
-                        mochilis.mapTo(dataList) { it.mochiliName }
-
-                        handler.post {
-                            recyclerView.adapter = MochiliRecyclerAdapter(recyclerView.context, dataList)
-                        }
-                    } catch (e: Exception) {
-                        e.stackTrace
-                    }
+                listener.getMochilis { mochilis ->
+                    recyclerView.adapter = MochiliRecyclerAdapter(recyclerView.context, mochilis)
                 }
             }
             FragmentEnum.FRIENDS -> {
@@ -101,6 +84,7 @@ class TopFragment : Fragment() {
     }
 
     interface TopFragmentListener {
+        fun getMochilis(noticeAdapter: (friends: Mochilis) -> Unit)
         fun getFriends(noticeAdapter: (friends: Friends) -> Unit)
     }
     //endregion

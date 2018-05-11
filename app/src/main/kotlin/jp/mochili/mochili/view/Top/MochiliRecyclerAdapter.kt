@@ -2,17 +2,18 @@ package jp.mochili.mochili.view.Top
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
-import android.widget.TextView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import jp.mochili.mochili.R
+import jp.mochili.mochili.model.apigateway.model.Mochilis
 
 
 /**
  * Created by ryotayamagishi on 2017/11/28.
  */
-class MochiliRecyclerAdapter(private val context: Context, private val dataList: List<String>)
+class MochiliRecyclerAdapter(private val context: Context, private val mochilis: Mochilis)
     : RecyclerView.Adapter<MochiliRecyclerAdapter.MyViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -22,11 +23,11 @@ class MochiliRecyclerAdapter(private val context: Context, private val dataList:
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.textview.text = dataList[position]
+        holder.textview.text = mochilis[position].mochiliName
     }
 
     override fun getItemCount(): Int {
-        return dataList.size
+        return mochilis.size
     }
 
     inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {

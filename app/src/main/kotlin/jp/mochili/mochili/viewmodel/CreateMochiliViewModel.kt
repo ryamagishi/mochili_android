@@ -77,7 +77,8 @@ class CreateMochiliViewModel(private val createMochiliView: CreateMochiliViewCon
                 if (result.status == "OK") {
                     handler.post {
                         val mochiliId = result.detail
-                        startMochiliActivity(mochiliId)
+//                        startMochiliActivity(mochiliId)
+                        createMochiliView.activityFinish()
                     }
                 } else {
                     // TODO

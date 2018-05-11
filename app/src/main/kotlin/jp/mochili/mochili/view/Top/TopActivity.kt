@@ -28,7 +28,7 @@ class TopActivity : AppCompatActivity(), TopViewContract, TopFragment.TopFragmen
 
     // viewpagerを管理するenum
     enum class FragmentEnum(val index: Int, val title: String, val image: Int, val color: Int) {
-        MOCHILIS(0, "持ち物リスト", R.mipmap.bg_android, android.R.color.holo_blue_light),
+        MOCHILIS(0, "共有メモ", R.mipmap.bg_android, android.R.color.holo_blue_light),
         FRIENDS(1, "友だち", R.mipmap.bg_ios, android.R.color.holo_red_light);
     }
 

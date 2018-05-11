@@ -27,7 +27,7 @@ class MochiliActivity : AppCompatActivity(), MochiliViewContract {
     private fun setView() {
         // actionbar
         setSupportActionBar(my_toolbar)
-        supportActionBar?.title = "持ち物リスト"
+        supportActionBar?.title = "共有メモ"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 

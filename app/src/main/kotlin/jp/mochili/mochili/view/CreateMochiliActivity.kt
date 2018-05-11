@@ -31,7 +31,7 @@ class CreateMochiliActivity : AppCompatActivity(), CreateMochiliViewContract {
     private fun setView() {
         // actionbar
         setSupportActionBar(my_toolbar)
-        supportActionBar?.title = "持ち物リスト作成"
+        supportActionBar?.title = "共有メモ作成"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         // mochilimembers

@@ -31,7 +31,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:ems="10"
-            android:hint="持ち物リスト名"
+            android:hint="共有メモ名"
             android:inputType="textPersonName"
             android:text="@={viewmodel.mochiliName}"
             app:layout_constraintEnd_toEndOf="parent"

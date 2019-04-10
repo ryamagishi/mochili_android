@@ -38,7 +38,7 @@ class AddFriendViewModel(private val addFriendView: AddFriendViewContract) {
     // databinding Userを検索してダイアログを表示
     fun onClickSearch(view: View) {
         // 自分のidで検索している時はダイアログをだし何もしない
-        if (userId == friendId.get().trim()) {
+        if (userId == friendId.get()?.trim() ?: "") {
             myUserIdDialog()
             return
         }
@@ -48,7 +48,7 @@ class AddFriendViewModel(private val addFriendView: AddFriendViewContract) {
                 val client = ApiClientFactory()
                         .credentialsProvider(credentialsProvider)
                         .build<MochiliClient>(MochiliClient::class.java)
-                val friend = client.userGet(friendId.get().trim())
+                val friend = client.userGet(friendId.get()?.trim())
                 if (friend.userId == null) handler.post { noneUserDialog() }
                 else handler.post {
                     confirmDialog(friend.userName) { _, _ -> addFriend(friend.userName) }
@@ -69,7 +69,7 @@ class AddFriendViewModel(private val addFriendView: AddFriendViewContract) {
                         .build<MochiliClient>(MochiliClient::class.java)
                 val friend = Friend()
                 friend.userId = userId
-                friend.friendId = friendId.get().trim()
+                friend.friendId = friendId.get()?.trim() ?: ""
                 val result: Result = client.friendPost(friend)
                 Log.d("FriendResult", result.status + "****" + result.detail)
                 if (result.status == "OK") {
@@ -87,7 +87,7 @@ class AddFriendViewModel(private val addFriendView: AddFriendViewContract) {
 
     //region dialog
     private fun noneUserDialog() {
-        val title = "「${friendId.get().trim()}」で一致するユーザーはいませんでした。"
+        val title = "「${friendId.get()?.trim()}」で一致するユーザーはいませんでした。"
         val message = """
                 ・ユーザー名ではなくユーザーIDで検索してください。
                 ・入力したユーザーIDが正しいか確認してください。
@@ -124,7 +124,7 @@ class AddFriendViewModel(private val addFriendView: AddFriendViewContract) {
     private fun myUserIdDialog() {
         val title = "エラーが発生しました。"
         val message = """
-                    「${friendId.get().trim()}」は自分のユーザーIDです。
+                    「${friendId.get()?.trim()}」は自分のユーザーIDです。
                     """.trimIndent()
         addFriendView.showDialog(title, message)
     }

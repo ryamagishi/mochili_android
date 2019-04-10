@@ -54,8 +54,8 @@ class SettingViewModel(private val settingView: SettingViewContract) {
 
     // 変更したかどうか、変更があった場合は問題ないかどうかをチェックしてdialogを表示
     fun checkChange(isFirst: Boolean, checkedFun: () -> Unit) {
-        updatedUserId = userId.get().trim()
-        updatedUserName = userName.get().trim()
+        updatedUserId = userId.get()?.trim() ?: ""
+        updatedUserName = userName.get()?.trim() ?: ""
 
         // 変化したかどうか
         val isChanged = (lastUserId != updatedUserId) or (lastUserName != updatedUserName)
@@ -92,8 +92,8 @@ class SettingViewModel(private val settingView: SettingViewContract) {
                         .credentialsProvider(credentialsProvider)
                         .build<MochiliClient>(MochiliClient::class.java)
                 val user = client.userGet(updatedUserId)
-                if (user.userId == null) handler.post(checkedFun) else handler.post{ uniqueIdDialog() }
-            } catch(e: Exception) {
+                if (user.userId == null) handler.post(checkedFun) else handler.post { uniqueIdDialog() }
+            } catch (e: Exception) {
                 e.stackTrace
             }
         }
@@ -126,7 +126,7 @@ class SettingViewModel(private val settingView: SettingViewContract) {
                 } else {
                     handler.post { savingErrorDialog() }
                 }
-            } catch(e: ApiClientException) {
+            } catch (e: ApiClientException) {
                 e.stackTrace
             }
         }

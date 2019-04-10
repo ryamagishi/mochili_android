@@ -15,8 +15,6 @@ import jp.mochili.mochili.viewmodel.SettingViewModel
 import kotlinx.android.synthetic.main.activity_setting.*
 
 
-
-
 class SettingActivity : AppCompatActivity(), SettingViewContract {
 
     private lateinit var viewModel: SettingViewModel
@@ -61,7 +59,11 @@ class SettingActivity : AppCompatActivity(), SettingViewContract {
             user_id_edit.setRawInputType(
                     InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS)
             val inputFilter = InputFilter { source, _, _, _, _, _ ->
-                if (source.toString().matches("^[0-9a-zA-Z]+$".toRegex())) { source } else { "" }
+                if (source.toString().matches("^[0-9a-zA-Z]+$".toRegex())) {
+                    source
+                } else {
+                    ""
+                }
             }
             val filters = arrayOf(inputFilter)
             user_id_edit.filters = filters.plus(InputFilter.LengthFilter(12))
@@ -98,7 +100,7 @@ class SettingActivity : AppCompatActivity(), SettingViewContract {
 
     // positiveEventのあるdialogを表示
     override fun showDialog(title: String, message: String,
-                   positiveEvent: (dialog: DialogInterface, which: Int) -> Unit) {
+                            positiveEvent: (dialog: DialogInterface, which: Int) -> Unit) {
         DialogUtils.showDialog(this, title, message, positiveEvent)
     }
 
